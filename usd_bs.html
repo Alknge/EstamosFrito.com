@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor USD <-> Bs</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(0, 104, 109, 0.9), rgba(0, 121, 128, 0.9)), 
+                        url('https://unsplash.com') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .calc-box {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+            color: white;
+            text-align: center;
+        }
+
+        /* Bloque superior de actualización solicitado */
+        .update-box {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px;
+            border-radius: 12px;
+            font-size: 0.78rem;
+            margin-bottom: 15px;
+            line-height: 1.3;
+        }
+
+        /* Selector visual idéntico a tu captura */
+        .currency-header-selector {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 10px;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            cursor: pointer;
+        }
+
+        .currency-badge {
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .swap-arrow {
+            font-size: 1.2rem;
+            color: #00ffcc;
+        }
+
+        /* Inputs limpios con fondo claro como el original pero integrados */
+        .input-container {
+            margin-bottom: 12px;
+            text-align: left;
+        }
+
+        .input-container label {
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #00ffcc;
+            display: block;
+            margin-bottom: 4px;
+            padding-left: 2px;
+        }
+
+        .screen-input {
+            width: 100%;
+            background: rgba(240, 244, 248, 0.95);
+            border: none;
+            border-radius: 12px;
+            padding: 14px;
+            color: #004d51;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-align: center;
+            outline: none;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.15);
+        }
+
+        .screen-input::placeholder {
+            color: #a0b2b5;
+        }
+
+        /* Botón Compartir WhatsApp */
+        .btn-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background-color: #25D366;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            margin-bottom: 10px;
+            margin-top: 5px;
+        }
+
+        /* Botón Limpiar */
+        .btn-clear {
+            width: 100%;
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            color: white;
+            padding: 10px;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            cursor: pointer;
+            margin-bottom: 12px;
+        }
+
+        .btn-clear:active {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Botón de Retorno */
+        .btn-menu {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background-color: #319ba1;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .btn-menu:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+<div class="calc-box">
+    <!-- Bloque de última actualización automatizado -->
+    <div class="update-box">
+        <!-- Busca tu texto de actualización y déjalo con este ID -->
+<div id="fecha-actualizacion-calc">Última actualización: Cargando...</div>
+
+    </div>
+
+    <!-- Indicador visual interactivo de moneda -->
+    <div class="currency-header-selector" onclick="toggleDirection()">
+        <div class="currency-badge" id="badge-input">???? USD</div>
+        <div class="swap-arrow">?</div>
+        <div class="currency-badge" id="badge-output">???? Bs</div>
+    </div>
+
+    <!-- Bloque de entrada (Automático) -->
+    <div class="input-container">
+        <label id="label-input">Cantidad a convertir (USD)</label>
+        <input type="number" id="primary-input" class="screen-input" placeholder="000" oninput="executeAutoConversion()">
+    </div>
+
+    <!-- Bloque de salida (Solo lectura) -->
+    <div class="input-container">
+        <label id="label-output">Resultado en Bolívares (Bs)</label>
+        <input type="text" id="secondary-output" class="screen-input" placeholder="000" readonly>
+    </div>
+
+    <!-- Botón Limpiar -->
+    <button class="btn-clear" onclick="clearFields()">Limpiar</button>
+
+    <!-- Botón Comercial de Envío WhatsApp -->
+    <a href="#" id="whatsapp-btn" target="_blank" class="btn-whatsapp" onclick="sendViaWhatsApp(event)">
+        ??  WhatsApp no activo 
+    </a>
+
+    <!-- Botón Volver -->
+    <a href="pagina2.html" class="btn-menu">
+        ?? Volver al Menú Principal
+    </a>
+</div>
+
+<script>
+     
+         // 1. COLOCA AQUÍ TU URL DE EXEC DE APPS SCRIPT
+    const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzw87Jb3Dlhj9ykvHyw51mNNoN1W8wAjITNmKk4QWtGtExwiIakuCy61NY9lyYio_wv/exec";
+    
+    // Valor base que se actualizará automáticamente desde Google Sheets
+    let TASA_DIARIA = 0.00; 
+    let currentMode = 'USD_TO_BS'; // Modo por defecto
+
+    // 2. Conectar con la URL de Apps Script para jalar la tasa y la fecha real
+    window.addEventListener('DOMContentLoaded', () => {
+        fetch(`${APPS_SCRIPT_URL}?action=read`)
+        .then(response => response.json())
+        .then(data => {
+            const config = data.config;
+            
+            // Asignar la tasa del dólar de hoy de la base de datos
+            TASA_DIARIA = parseFloat(config.dolar_hoy) || 0.00;
+            
+            // Inyectar de forma inmediata la fecha guardada en la base de datos
+            if (config.fecha_actualizacion) {
+                document.getElementById('live-update-date').innerText = "Última actualización: " + config.fecha_actualizacion;
+            } else {
+                // Si la base de datos no tiene fecha, usa la función del sistema de respaldo
+                initUpdateDateBackup();
+            }
+            
+            // Si el usuario ya digitó un número antes de cargar la tasa, recalcular
+            executeAutoConversion();
+        })
+        .catch(error => {
+            console.error("Error conectando con Apps Script por URL:", error);
+            // Respaldo por si falla la conexión a internet
+            initUpdateDateBackup();
+        });
+    });
+
+    // Función de respaldo para colocar fecha del sistema si la base de datos está vacía
+    function initUpdateDateBackup() {
+        const now = new Date();
+        const months = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
+        
+        const day = now.getDate();
+        const monthName = months[now.getMonth()];
+        const year = now.getFullYear();
+        
+        let hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'p. m.' : 'a. m.';
+        
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        
+        const finalString = `${day} ${monthName} ${year}, ${hours}:${minutes} ${ampm}`;
+        document.getElementById('live-update-date').innerText = finalString;
+    }
+
+    // Cambiar sentido al pulsar el encabezado de banderas
+    function toggleDirection() {
+        const badgeIn = document.getElementById('badge-input');
+        const badgeOut = document.getElementById('badge-output');
+        const labelIn = document.getElementById('label-input');
+        const labelOut = document.getElementById('label-output');
+
+        if (currentMode === 'USD_TO_BS') {
+            currentMode = 'BS_TO_GRID';
+            badgeIn.innerHTML = '???? Bs';
+            badgeOut.innerHTML = '???? USD';
+            labelIn.innerText = 'Cantidad a convertir (Bs)';
+            labelOut.innerText = 'Resultado en Dólares (USD)';
+        } else {
+            currentMode = 'USD_TO_BS';
+            badgeIn.innerHTML = '???? USD';
+            badgeOut.innerHTML = '???? Bs';
+            labelIn.innerText = 'Cantidad a convertir (USD)';
+            labelOut.innerText = 'Resultado en Bolívares (Bs)';
+        }
+        clearFields();
+    }
+
+    // Conversor automático inmediato en tiempo real con la tasa de Google Sheets
+    function executeAutoConversion() {
+        const inputField = document.getElementById('primary-input');
+        const outputField = document.getElementById('secondary-output');
+        
+        if (!inputField || !outputField) return;
+        
+        const val = parseFloat(inputField.value);
+
+        if (isNaN(val) || val <= 0) {
+            outputField.value = '';
+            return;
+        }
+
+        let result = 0;
+        if (currentMode === 'USD_TO_BS') {
+            result = val * TASA_DIARIA;
+            outputField.value = result.toFixed(2) + " Bs";
+        } else {
+            result = val / TASA_DIARIA;
+            outputField.value = result.toFixed(2) + " USD";
+        }
+    }
+
+    function clearFields() {
+        document.getElementById('primary-input').value = '';
+        document.getElementById('secondary-output').value = '';
+    }
+
+    // Compartir por WhatsApp con formato comercial limpio (Corregido y sincronizado)
+    function sendViaWhatsApp(event) {
+        const inputVal = document.getElementById('primary-input').value;
+        const outputVal = document.getElementById('secondary-output').value;
+
+        if (!inputVal || !outputVal) {
+            event.preventDefault();
+            alert("Rellena una cantidad para poder despachar el presupuesto.");
+            return;
+        }
+
+        let message = "";
+        if (currentMode === 'USD_TO_BS') {
+            message = `*Estamos fritos.com* ??%0A%0A*Conversión:*%0A?? Cantidad: *${inputVal} USD*%0A?? Resultado: *${outputVal}*%0A?? Tasa: ${TASA_DIARIA.toFixed(2)} Bs`;
+        } else {
+            message = `*Estamos fritos.com* ??%0A%0A*Conversión:*%0A?? Cantidad: *${inputVal} Bs*%0A?? Resultado: *${outputVal}*%0A?? Tasa: ${TASA_DIARIA.toFixed(2)} Bs`;
+        }
+
+        // Corrección de la sintaxis del enlace de WhatsApp
+        document.getElementById('whatsapp-btn').href = `https://wa.me{message}`;
+    }
+    
+     
+     
+</script>
+
+</body>
+</html>

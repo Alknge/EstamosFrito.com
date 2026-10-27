@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estamos fritos.com</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #007980;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px; /* Reducido para pantallas pequeñas */
+        }
+
+        .app-container {
+            width: 100%;
+            max-width: 400px; /* Más compacto */
+            background: linear-gradient(135deg, #00686d, #008890);
+            border-radius: 20px;
+            padding: 15px; /* Menos espacio interno */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 1.6rem; /* Texto más pequeño */
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .date-box {
+            background-color: #319ba1;
+            padding: 5px; /* Más plano */
+            border-radius: 10px;
+            font-size: 0.85rem; /* Texto reducido */
+            font-weight: bold;
+            margin-bottom: 6px;
+        }
+
+        .time-box {
+            font-size: 1.5rem; /* Compactado */
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .rates-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .rate-card {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 12px;
+            padding: 6px;
+        }
+        .rate-card .title { 
+            font-size: 0.75rem; 
+            font-weight: bold; 
+            margin-bottom: 3px; 
+            min-height: 28px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+        }
+        .rate-card .value { font-size: 0.85rem; font-weight: bold; }
+
+        .language-selector {
+            margin-bottom: 15px;
+            font-size: 0.9rem;
+        }
+
+        .language-selector select {
+            background-color: transparent;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            padding: 3px 6px;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            cursor: pointer;
+        }
+        .language-selector select option {
+            background-color: #00686d;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px; /* Botones más juntos */
+        }
+
+        .menu-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 14px;
+            padding: 10px 5px; /* Botones menos altos */
+            color: white;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .menu-btn:hover { background: rgba(255, 255, 255, 0.2); }
+        .menu-btn:active { transform: scale(0.97); }
+
+        .btn-text {
+            font-size: 0.8rem; /* Letras de botones optimizadas para móvil */
+            font-weight: bold;
+            margin-bottom: 4px;
+            min-height: 26px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            line-height: 1.1;
+        }
+
+        .btn-icon {
+            font-size: 1.4rem; /* Iconos sutilmente más pequeños */
+        }
+
+        .footer-text {
+            margin-top: 12px;
+            font-size: 0.65rem;
+            opacity: 0.5;
+            text-align: right;
+        }
+        
+        
+        /* Capa de fondo con efecto vidrio/cristalizado esmerilado */
+.mantenimiento-overlay {
+    display: none; /* Se activa dinámicamente con JavaScript */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background: rgba(33, 58, 61, 0.65); /* Fondo base traslúcido tono verde esmerilado */
+    backdrop-filter: blur(15px); /* Desenfoque de cristal premium */
+    -webkit-backdrop-filter: blur(15px);
+    z-index: 99999; /* Se superpone a todo el menú y botones */
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+/* Tarjeta Central Flotante */
+.mantenimiento-card {
+    background: rgba(42, 83, 86, 0.9);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 35px 25px;
+    border-radius: 24px;
+    max-width: 450px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+    animation: aparecer 0.4s ease-out;
+}
+
+.icono-alerta {
+    font-size: 3.5rem;
+    margin-bottom: 15px;
+    animation: pulso 2s infinite;
+}
+
+.mantenimiento-card h2 {
+    color: #ffffff;
+    font-size: 1.5rem;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+}
+
+.mantenimiento-card p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 20px;
+}
+
+/* Animación de barra de carga inferior */
+.loader-linea {
+    height: 4px;
+    width: 60%;
+    background: #1abc9c;
+    margin: 0 auto;
+    border-radius: 2px;
+    position: relative;
+    overflow: hidden;
+}
+.loader-linea::after {
+    content: '';
+    position: absolute;
+    left: -50%;
+    height: 100%;
+    width: 50%;
+    background: #2ecc71;
+    animation: carga-infinita 1.5s infinite linear;
+}
+
+@keyframes aparecer {
+    from { transform: scale(0.9); opacity: 0; }
+    to { transform: scale(1); opacity: 1; }
+}
+@keyframes pulso {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.08); }
+    100% { transform: scale(1); }
+}
+@keyframes carga-infinita {
+    from { left: -50%; }
+    to { left: 100%; }
+}
+
+        
+        
+    </style>
+</head>
+
+<body>
+    
+
+<div class="app-container">
+    <div class="header-title">Estamos fritos.com</div>
+    
+    <!-- Fecha y Hora Dinámica y Automática -->
+    <div class="date-box" id="date-display">...</div>
+    <div class="time-box" id="time-display">...</div>
+
+       <!-- Bloques de Tasas -->
+    <div class="rates-container">
+        <div class="rate-card">
+            <div class="title" id="lbl-rate-daily">Dólar de hoy ??</div>
+            <!-- Se agregó el ID tasa-hoy al precio -->
+            <div class="value">$ 1  =   <span id="tasa-hoy">000.00</span> Bs</div>
+        </div>
+        <div class="rate-card">
+            <!-- Se agregó el ID fecha-actualizacion al título dinámico de mañana/lunes -->
+            <div class="title" id="fecha-actualizacion">Dólar lunes 12-10-2026 ??</div>
+            <!-- Se agregó el ID tasa-manana al precio -->
+            <div class="value">$ 1  = <span id="tasa-manana">000.00</span> Bs</div>
+        </div>
+    </div>
+    
+
+    <!-- Selector de Idioma -->
+    <div class="language-selector">
+        <span id="lbl-lang">Idioma:</span>
+        <select id="lang-select" onchange="changeLanguage(this.value)">
+            <option value="es">Español</option>
+            <option value="en">English</option>
+            <option value="pt">Português</option>
+        </select>
+    </div>
+
+    <!-- Menú Reducido de 8 Botones -->
+    <div class="menu-grid">
+        <a href="usd_bs.html" class="menu-btn">
+            <div class="btn-text" id="btn-usd-bs">USD <-> Bs</div>
+            <div class="btn-icon">???? ????</div>
+        </a>
+
+        <a href="Historial.html" class="menu-btn">
+            <div class="btn-text" id="btn-real">Historial</div>
+            <div class="btn-icon">???</div>
+        </a>
+
+        <a href="calculadora.html" class="menu-btn">
+            <div class="btn-text" id="btn-calc">Calculadora de Divisas</div>
+            <div class="btn-icon">??</div>
+        </a>
+
+        <a href="conversor_euro.html" class="menu-btn">
+            <div class="btn-text" id="btn-euro">Conversor a Euro</div>
+            <div class="btn-icon">?? ????</div>
+        </a>
+
+        <a href="notas.html" class="menu-btn">
+            <div class="btn-text" id="btn-notes">Mis Notas Financieras</div>
+            <div class="btn-icon">??</div>
+        </a>
+
+        <a href="analiticas.html" class="menu-btn">
+            <div class="btn-text" id="btn-charts">Analíticas y Gráficos</div>
+            <div class="btn-icon">??</div>
+        </a>
+
+        <a href="privacidad.html" class="menu-btn">
+            <div class="btn-text" id="btn-privacy">Centro de Privacidad</div>
+            <div class="btn-icon">??</div>
+        </a>
+
+        <a href="videos.html" class="menu-btn">
+            <div class="btn-text" id="btn-videos">Centro Multimedia de Videos</div>
+            <div class="btn-icon">??</div>
+        </a>
+    </div>
+
+    <div class="footer-text" id="footer-version">Model v2.1.2026</div>
+</div>
+
+
+<!-- CAPA DE BLOQUEO CRISTALIZADO (MANTENIMIENTO) -->
+<div id="pantalla-mantenimiento" class="mantenimiento-overlay" style="display: none;">
+    <div class="mantenimiento-card">
+        <div class="icono-alerta">??</div>
+        <h2>SISTEMA EN MANTENIMIENTO</h2>
+        <p>Disculpen las molestias, en breve la página se activará nuevamente.</p>
+        <div class="loader-linea"></div>
+    </div>
+</div>
+
+
+
+<script>
+ 
+     const translations = {
+        es: {
+            rateDaily: "Tasa de Cambio Diaria Actual ??",
+            rateWeekend: "Tasa de Cambio de Fin de Semana ??",
+            langLabel: "Idioma:",
+            btnUsdBs: "USD <-> Bs",
+            btnReal: "Conversor a Real",
+            btnCalc: "Calculadora de Divisas",
+            btnEuro: "Conversor a Euro",
+            btnNotes: "Mis Notas Financieras",
+            btnCharts: "Analíticas y Gráficos",
+            btnPrivacy: "Centro de Privacidad",
+            btnVideos: "Centro Multimedia de Videos",
+            days: ["DOMINGO", "LUNES", "MARTES", "MIÉRCOLES", "JUEVES", "VIERNES", "SÁBADO"]
+        },
+        en: {
+            rateDaily: "Current Daily Exchange Rate ??",
+            rateWeekend: "Weekend Exchange Rate ??",
+            langLabel: "Language:",
+            btnUsdBs: "USD <-> Bs",
+            btnReal: "Real Converter",
+            btnCalc: "Currency Calculator",
+            btnEuro: "Euro Converter",
+            btnNotes: "My Financial Notes",
+            btnCharts: "Analytics & Charts",
+            btnPrivacy: "Privacy Center",
+            btnVideos: "Video Multimedia Center",
+            days: ["SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"]
+        },
+        pt: {
+            rateDaily: "Taxa de Câmbio Diária Atual ??",
+            rateWeekend: "Taxa de Câmbio de Fim de Semana ??",
+            langLabel: "Idioma:",
+            btnUsdBs: "USD <-> Bs",
+            btnReal: "Conversor para Real",
+            btnCalc: "Calculadora de Divisas",
+            btnEuro: "Conversor para Euro",
+            btnNotes: "Minhas Notas Financeiras",
+            btnCharts: "Análises e Gráficos",
+            btnPrivacy: "Centro de Privacidade",
+            btnVideos: "Centro Multimídia de Vídeos",
+            days: ["DOMINGO", "SEGUNDA", "TERÇA", "QUARTA", "QUINTA", "SEXTA", "SÁBADO"]
+        }
+    };
+
+    let currentLang = 'es';
+
+    function changeLanguage(lang) {
+        currentLang = lang;
+        const t = translations[lang];
+        
+        document.getElementById('lbl-rate-daily').innerText = t.rateDaily;
+        document.getElementById('lbl-rate-weekend').innerText = t.rateWeekend;
+        document.getElementById('lbl-lang').innerText = t.langLabel;
+        document.getElementById('btn-usd-bs').innerText = t.btnUsdBs;
+        document.getElementById('btn-real').innerText = t.btnReal;
+        document.getElementById('btn-calc').innerText = t.btnCalc;
+        document.getElementById('btn-euro').innerText = t.btnEuro;
+        document.getElementById('btn-notes').innerText = t.btnNotes;
+        document.getElementById('btn-charts').innerText = t.btnCharts;
+        document.getElementById('btn-privacy').innerText = t.btnPrivacy;
+        document.getElementById('btn-videos').innerText = t.btnVideos;
+        
+        updateClock();
+    }
+
+    function updateClock() {
+        const now = new Date();
+        
+        // Fecha Real Automática basada en el sistema local
+        const dayName = translations[currentLang].days[now.getDay()];
+        const day = String(now.getDate()).padStart(2, '0');
+        const month = String(now.getMonth() + 1).padStart(2, '0');
+        const year = now.getFullYear();
+        document.getElementById('date-display').innerText = `${dayName} ${day}-${month}-${year} BCV`;
+
+        // Ajustar pie de página con el año real actual dinámicamente
+        document.getElementById('footer-version').innerText = `Model v2.1.${year}`;
+
+        // Hora 12 Horas AM/PM
+        let hours = now.getHours();
+        const minutes = String(now.getMinutes()).padStart(2, '0');
+        const seconds = String(now.getSeconds()).padStart(2, '0');
+        const ampm = hours >= 12 ? 'PM' : 'AM';
+        
+        hours = hours % 12;
+        hours = hours ? hours : 12;
+        const strHours = String(hours).padStart(2, '0');
+
+        document.getElementById('time-display').innerText = `${strHours} : ${minutes} : ${seconds} ${ampm}`;
+    }
+
+    setInterval(updateClock, 1000);
+    updateClock();
+    
+    // URL de conexión directa con tu Google Sheets
+    const API_URL = "https://script.google.com/macros/s/AKfycbzw87Jb3Dlhj9ykvHyw51mNNoN1W8wAjITNmKk4QWtGtExwiIakuCy61NY9lyYio_wv/exec";
+
+    // Ejecución automática al abrir la aplicación principal
+    window.addEventListener('DOMContentLoaded', () => {
+        obtenerTasaYEstado();
+    });
+
+    function obtenerTasaYEstado() {
+        fetch(`${API_URL}?action=read`)
+        .then(response => response.json())
+        .then(data => {
+            const config = data.config;
+
+            // 1. PRIMERO: Inyectar y actualizar los textos en tu interfaz pública
+            if(document.getElementById('tasa-hoy')) document.getElementById('tasa-hoy').innerText = config.dolar_hoy;
+            if(document.getElementById('tasa-manana')) document.getElementById('tasa-manana').innerText = config.dolar_manana;
+            if(document.getElementById('fecha-actualizacion')) document.getElementById('fecha-actualizacion').innerText = "Última actualización: " + config.fecha_actualizacion;
+
+            // 2. SEGUNDO: Respaldar las tasas en memoria para mantener estables los conversores
+            localStorage.setItem('dolar_hoy', config.dolar_hoy);
+            localStorage.setItem('euro_hoy', config.euro_hoy);
+            localStorage.setItem('fecha_actualizacion', config.fecha_actualizacion);
+
+            // 3. TERCERO: Evaluar bloqueo de pantalla sin interrumpir la carga de datos
+            const capaBloqueo = document.getElementById('pantalla-mantenimiento');
+            if (capaBloqueo) {
+                if (config.mantenimiento == "1") {
+                    capaBloqueo.style.display = 'flex'; // Activa el cristalizado si el switch es 1
+                } else {
+                    capaBloqueo.style.display = 'none'; // Desactiva el cristalizado si el switch es 0
+                }
+            }
+        })
+        .catch(error => {
+            console.error("Error cargando la base de datos:", error);
+        });
+    }
+    
+ 
+</script>
+
+</body>
+</html>

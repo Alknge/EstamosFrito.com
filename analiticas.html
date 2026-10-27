@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas y Analíticas | Comercial</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #007980;
+            color: white;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 15px;
+        }
+
+        .analytics-container {
+            width: 100%;
+            max-width: 450px;
+            background: linear-gradient(135deg, #00686d, #008890);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .header-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .subtitle {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        /* Tarjetas de Datos */
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            padding: 12px;
+        }
+
+        .metric-card .value {
+            font-size: 1.6rem;
+            font-weight: bold;
+            color: #00ffcc;
+            margin-bottom: 4px;
+        }
+
+        .metric-card .label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            opacity: 0.9;
+        }
+
+        /* GRÁFICO NATIVO ULTRA RÁPIDO (SIN DEPENDENCIAS) */
+        .chart-box {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            padding: 20px 15px 10px 15px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .chart-title {
+            color: #333;
+            font-size: 0.85rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: left;
+        }
+
+        .bar-chart {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+            height: 150px;
+            padding-top: 10px;
+        }
+
+        .chart-column {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+        }
+
+        .bar {
+            width: 70%;
+            max-width: 25px;
+            background: linear-gradient(to top, #00686d, #008890);
+            border-radius: 4px 4px 0 0;
+            transition: height 0.5s ease-out;
+            position: relative;
+        }
+
+        /* Valor flotante sobre la barra */
+        .bar-value {
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #333;
+            font-size: 0.65rem;
+            font-weight: bold;
+        }
+
+        .bar-label {
+            color: #444;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-top: 8px;
+        }
+
+        /* Botón Volver */
+        .btn-back {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background-color: #319ba1;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .btn-back:hover { background-color: #3cb0b7; }
+        .btn-back:active { transform: scale(0.98); }
+    </style>
+</head>
+<body>
+
+<div class="analytics-container">
+    <div class="header-title">Panel de Analíticas</div>
+    <div class="subtitle">Métricas de Rendimiento y Uso de la App</div>
+
+    <div class="metrics-grid">
+        <div class="metric-card">
+            <div class="value" id="visit-count">0</div>
+            <div class="label">Visitas Totales</div>
+        </div>
+        <div class="metric-card">
+            <div class="value" id="time-count">0s</div>
+            <div class="label">Tiempo en App</div>
+        </div>
+    </div>
+
+    <!-- Gráfico Comercial Rediseñado e Instantáneo -->
+    <div class="chart-box">
+        <div class="chart-title">Volumen de Visitas Semanales</div>
+        <div class="bar-chart">
+            <div class="chart-column">
+                <div class="bar" style="height: 45%;"><span class="bar-value">45</span></div>
+                <div class="bar-label">Lun</div>
+            </div>
+            <div class="chart-column">
+                <div class="bar" style="height: 60%;"><span class="bar-value">60</span></div>
+                <div class="bar-label">Mar</div>
+            </div>
+            <div class="chart-column">
+                <div class="bar" style="height: 30%;"><span class="bar-value">30</span></div>
+                <div class="bar-label">Mié</div>
+            </div>
+            <div class="chart-column">
+                <div class="bar" style="height: 75%;"><span class="bar-value">75</span></div>
+                <div class="bar-label">Jue</div>
+            </div>
+            <div class="chart-column">
+                <div class="bar" style="height: 90%;"><span class="bar-value">90</span></div>
+                <div class="bar-label">Vie</div>
+            </div>
+            <div class="chart-column">
+                <div class="bar" id="live-bar" style="height: 10%;"><span class="bar-value" id="live-val">0</span></div>
+                <div class="bar-label">Sáb</div>
+            </div>
+            <div class="chart-column">
+                <div class="bar" style="height: 5%;"><span class="bar-value">0</span></div>
+                <div class="bar-label">Dom</div>
+            </div>
+        </div>
+    </div>
+
+    <a href="pagina2.html" class="btn-back">
+        ?? Volver al Menú Principal
+    </a>
+</div>
+
+<script>
+    // Contador de visitas locales
+    let visits = localStorage.getItem('app_visits') ? parseInt(localStorage.getItem('app_visits')) : 0;
+    visits++;
+    localStorage.setItem('app_visits', visits);
+    document.getElementById('visit-count').innerText = visits;
+
+    // Actualizar la columna del gráfico en tiempo real con tus visitas reales
+    let liveBarHeight = Math.min(visits * 8, 100); 
+    document.getElementById('live-bar').style.height = liveBarHeight + '%';
+    document.getElementById('live-val').innerText = visits;
+
+    // Cronómetro de retención
+    let totalSeconds = localStorage.getItem('app_total_time') ? parseInt(localStorage.getItem('app_total_time')) : 0;
+    
+    function updateTimer() {
+        totalSeconds++;
+        localStorage.setItem('app_total_time', totalSeconds);
+        
+        let minutes = Math.floor(totalSeconds / 60);
+        let seconds = totalSeconds % 60;
+        
+        let displayTime = minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+        document.getElementById('time-count').innerText = displayTime;
+    }
+    setInterval(updateTimer, 1000);
+</script>
+
+</body>
+</html>

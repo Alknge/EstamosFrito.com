@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Calculadora Móvil - Estamos Fritos</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Ajuste exacto para la pantalla del móvil */
+        body {
+            background-color: #047575; /* Fondo del mismo color del menú */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            height: 100vh;
+            overflow: hidden;
+            padding: 15px;
+        }
+
+        /* Contenedor estirado óptimo para dispositivos móviles */
+        .calculadora-container {
+            background-color: #047575; 
+            width: 100%;
+            height: 100%;
+            max-width: 400px;
+            max-height: 750px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .titulo {
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        /* Pantalla doble optimizada */
+        .pantalla-container {
+            width: 100%;
+            background-color: #025757; 
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 16px;
+            padding: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 110px;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Parte superior: Operación en curso */
+        .pantalla-operacion {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1.2rem;
+            text-align: right;
+            overflow-x: auto;
+            white-space: nowrap;
+            height: 28px;
+        }
+
+        /* Parte inferior: Resultado automático */
+        .pantalla-resultado {
+            color: #ffffff;
+            font-size: 2.2rem;
+            font-weight: bold;
+            text-align: right;
+            overflow-x: auto;
+            white-space: nowrap;
+            height: 45px;
+            line-height: 45px;
+        }
+
+        /* Rejilla de botones flexible para rellenar el espacio móvil */
+        .botones-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            flex-grow: 1;
+            margin-bottom: 15px;
+        }
+
+        .btn {
+            background-color: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 14px;
+            color: #ffffff;
+            font-size: 1.4rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.1s ease, transform 0.05s ease;
+            user-select: none;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .btn-operador {
+            font-size: 1.9rem; 
+            font-weight: bold;
+            background-color: rgba(255, 255, 255, 0.14);
+        }
+
+        .btn:active {
+            background-color: rgba(255, 255, 255, 0.25);
+            transform: scale(0.95);
+        }
+
+        .btn-igual {
+            background-color: #0b9e9e;
+            border-color: rgba(255, 255, 255, 0.3);
+            font-size: 1.9rem;
+        }
+
+        .btn-borrar {
+            color: #ff8a8a;
+        }
+
+        .btn-volver {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background-color: transparent;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            color: #ffffff;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            text-align: center;
+            transition: all 0.2s ease;
+        }
+
+        .btn-volver:active {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="calculadora-container">
+        <div class="titulo">Calculadora</div>
+        
+        <!-- Contenedor con la doble pantalla -->
+        <div class="pantalla-container">
+            <div id="pantalla-operacion" class="pantalla-operacion"></div>
+            <div id="pantalla-resultado" class="pantalla-resultado">0</div>
+        </div>
+        
+        <div class="botones-grid">
+            <!-- Fila 1 -->
+            <button class="btn btn-borrar" onclick="limpiarTodo()">C</button>
+            <button class="btn btn-borrar" onclick="borrarUltimo()">?</button>
+            <button class="btn btn-operador" onclick="agregarOperador('%')">%</button>
+            <button class="btn btn-operador" onclick="agregarOperador('/')">÷</button>
+            
+            <!-- Fila 2 -->
+            <button class="btn" onclick="agregarNumero('7')">7</button>
+            <button class="btn" onclick="agregarNumero('8')">8</button>
+            <button class="btn" onclick="agregarNumero('9')">9</button>
+            <button class="btn btn-operador" onclick="agregarOperador('*')">×</button>
+            
+            <!-- Fila 3 -->
+            <button class="btn" onclick="agregarNumero('4')">4</button>
+            <button class="btn" onclick="agregarNumero('5')">5</button>
+            <button class="btn" onclick="agregarNumero('6')">6</button>
+            <button class="btn btn-operador" onclick="agregarOperador('-')">-</button>
+            
+            <!-- Fila 4 -->
+            <button class="btn" onclick="agregarNumero('1')">1</button>
+            <button class="btn" onclick="agregarNumero('2')">2</button>
+            <button class="btn" onclick="agregarNumero('3')">3</button>
+            <button class="btn btn-operador" onclick="agregarOperador('+')">+</button>
+            
+            <!-- Fila 5 -->
+            <button class="btn" onclick="agregarNumero('0')" style="grid-column: span 2;">0</button>
+            <button class="btn" onclick="agregarNumero('.')">.</button>
+            <button class="btn btn-igual" onclick="fijarResultado()">=</button>
+        </div>
+
+        <a href="pagina2.html" class="btn-volver">?? Volver al Menú</a>
+    </div>
+
+    <script>
+        const pantallaOperacion = document.getElementById('pantalla-operacion');
+        const pantallaResultado = document.getElementById('pantalla-resultado');
+        let operacionActual = '';
+
+        function agregarNumero(numero) {
+            if (numero === '.' && operacionActual.split(/[\+\-\*\/%]/).pop().includes('.')) return;
+            
+            if (operacionActual === '0' && numero !== '.') {
+                operacionActual = numero;
+            } else {
+                operacionActual += numero;
+            }
+            pantallaOperacion.textContent = operacionActual;
+            calcularAutomatico();
+        }
+
+        function agregarOperador(operador) {
+            if (operacionActual === '') return;
+            
+            const ultimoCaracter = operacionActual.slice(-1);
+            if (['+', '-', '*', '/', '%'].includes(ultimoCaracter)) {
+                operacionActual = operacionActual.slice(0, -1) + operador;
+            } else {
+                operacionActual += operador;
+            }
+            pantallaOperacion.textContent = operacionActual;
+            calcularAutomatico();
+        }
+
+        function limpiarTodo() {
+            operacionActual = '';
+            pantallaOperacion.textContent = '';
+            pantallaResultado.textContent = '0';
+        }
+
+        function borrarUltimo() {
+            operacionActual = operacionActual.toString().slice(0, -1);
+            pantallaOperacion.textContent = operacionActual;
+            calcularAutomatico();
+        }
+
+        // Calcula el resultado en tiempo real sin borrar la línea de arriba
+        function calcularAutomatico() {
+            if (operacionActual === '') {
+                pantallaResultado.textContent = '0';
+                return;
+            }
+
+            const ultimoCaracter = operacionActual.slice(-1);
+            // Si termina en un operador básico, no calcula hasta recibir el siguiente número
+            if (['+', '-', '*', '/'].includes(ultimoCaracter)) return;
+
+            try {
+                let expresion = operacionActual;
+
+                // Lógica de porcentaje corregida para casos estándar y de comercio:
+                // Ejemplo: "100 * 10 %" -> lo convierte en "100 * (10 / 100)" arrojando 10 de manera limpia
+                if (expresion.includes('%')) {
+                    const regexSumaResta = /(\d+(?:\.\d+)?)\s*([\+\-])\s*(\d+(?:\.\d+)?)%/g;
+                    if (regexSumaResta.test(expresion)) {
+                        expresion = expresion.replace(regexSumaResta, function(match, base, operador, porcentaje) {
+                            return `${base} ${operador} (${base} * ${porcentaje} / 100)`;
+                        });
+                    } else {
+                        expresion = expresion.replace(/(\d+(?:\.\d+)?)%/g, '($1/100)');
+                    }
+                }
+
+                let resultado = Function(`"use strict"; return (${expresion})`)();
+                
+                if (resultado % 1 !== 0) {
+                    resultado = parseFloat(resultado.toFixed(6));
+                }
+
+                pantallaResultado.textContent = resultado;
+            } catch (error) {
+                // Falla en silencio mientras el usuario sigue escribiendo la fórmula
+            }
+        }
+
+              // Al presionar el botón "=" pasa el resultado arriba para poder seguir operando sobre él
+        function fijarResultado() {
+            if (pantallaResultado.textContent !== 'Error' && pantallaResultado.textContent !== '0') {
+                operacionActual = pantallaResultado.textContent;
+                pantallaOperacion.textContent = operacionActual;
+            }
+        }
+    </script>
+</body>
+</html>

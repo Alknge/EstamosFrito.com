@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estamos Fritos - Videos</title>
+    <style>
+        /* CONFIGURACIÓN BASE ESTILO MÓVIL */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            user-select: none;
+        }
+
+        body {
+            background-color: #000;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* CONTENEDOR TIKTOK COMPACTO */
+        .tiktok-container {
+            width: 100%;
+            max-width: 450px;
+            height: 100vh;
+            background-color: #000;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* BOTÓN VOLVER FIJO AL MENÚ PRINCIPAL */
+        .btn-back-main {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            z-index: 10;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 8px 14px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: bold;
+        }
+
+        /* FEED CON DESLIZAMIENTO VERTICAL (SCROLL SNAP) */
+        .video-feed {
+            width: 100%;
+            height: 100%;
+            overflow-y: scroll;
+            scroll-snap-type: y mandatory;
+            scrollbar-width: none;
+        }
+
+        .video-feed::-webkit-scrollbar {
+            display: none;
+        }
+
+        /* CADA PANTALLA DE VIDEO DEBE ABARCAR EL 100% VISIBLE */
+        .video-card {
+            width: 100%;
+            height: 100vh;
+            scroll-snap-align: start;
+            position: relative;
+            background-color: #111;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* AJUSTE PERFECTO A LA PANTALLA DEL MÓVIL SIN DEFORMAR */
+        video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* ACCIONES LATERALES DERECHAS */
+        .side-bar {
+            position: absolute;
+            right: 15px;
+            bottom: 120px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            align-items: center;
+            z-index: 5;
+        }
+
+        .action-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            cursor: pointer;
+            background: none;
+            border: none;
+            color: white;
+            outline: none;
+        }
+
+        .icon-circle {
+            width: 44px;
+            height: 44px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.6rem;
+            margin-bottom: 4px;
+            transition: transform 0.1s;
+        }
+
+        .icon-circle:active {
+            transform: scale(0.85);
+        }
+
+        .count-text {
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-shadow: 1px 1px 3px rgba(0,0,0,0.8);
+        }
+
+        /* DETALLES DEL VIDEO (PARTE INFERIOR) */
+        .video-info {
+            position: absolute;
+            left: 15px;
+            bottom: 40px;
+            right: 80px;
+            z-index: 5;
+            text-align: left;
+            text-shadow: 1px 1px 4px rgba(0,0,0,0.9);
+        }
+
+        .username {
+            font-weight: bold;
+            font-size: 1rem;
+            margin-bottom: 5px;
+            color: #00ffcc;
+        }
+
+        .description {
+            font-size: 0.85rem;
+            opacity: 0.95;
+            line-height: 1.3;
+        }
+
+        /* CONTAINER PEQUEÑO DE CHAT/COMENTARIOS MODAL */
+        .chat-container {
+            position: absolute;
+            bottom: -100%;
+            left: 0;
+            width: 100%;
+            height: 55%;
+            background: rgba(20, 20, 20, 0.98);
+            border-radius: 16px 16px 0 0;
+            z-index: 20;
+            transition: bottom 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            padding: 15px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-container.active {
+            bottom: 0;
+        }
+
+        .chat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: bold;
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 8px;
+        }
+
+        .chat-close {
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #ff5555;
+            padding: 0 5px;
+        }
+
+        .chat-messages {
+            flex: 1;
+            overflow-y: auto;
+            text-align: left;
+            font-size: 0.85rem;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .msg-bubble {
+            background: rgba(255, 255, 255, 0.08);
+            padding: 8px 12px;
+            border-radius: 10px;
+            max-width: 85%;
+            align-self: flex-start;
+        }
+
+        .chat-input-bar {
+            display: flex;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .chat-input-bar input {
+            flex: 1;
+            background: #222;
+            border: 1px solid #444;
+            border-radius: 8px;
+            padding: 10px;
+            color: white;
+            outline: none;
+            font-size: 0.85rem;
+        }
+
+        .chat-input-bar button {
+            background: #00ffcc;
+            color: #00686d;
+            border: none;
+            padding: 0 16px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+
+<div class="tiktok-container">
+    <!-- Regresar al menú principal -->
+    <a href="pagina2.html" class="btn-back-main">?? Menú Principal</a>
+
+    <!-- FEED DE VIDEOS -->
+    <div class="video-feed" id="main-feed">
+
+        <!-- ==================== VIDEO 1 ==================== -->
+        <div class="video-card" data-id="vid1">
+            <video src="video/vive.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid1', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid1">150</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid1')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid1', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid1">12</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@vive FM online</div>
+                <div class="description">Emisora cristiana 24 horas de buena música ??</div>
+            </div>
+        </div>
+
+        <!-- ==================== VIDEO 2 ==================== -->
+        <div class="video-card" data-id="vid2">
+            <video src="video/cafe.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid2', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid2">320</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid2')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid2', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid2">45</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@cafe con pan</div>
+                <div class="description">Animación bebe bailando ???</div>
+            </div>
+        </div>
+
+              <!-- ==================== VIDEO 3 ==================== -->
+        <div class="video-card" data-id="vid3">
+            <video src="video/electronica.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid3', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid3">540</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid3')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid3', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid3">89</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@creacion animado</div>
+                <div class="description">Mundo de la electrónica</div>
+            </div>
+        </div>
+
+        <!-- ==================== VIDEO 4 ==================== -->
+        <div class="video-card" data-id="vid4">
+            <video src="video/alabanza.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid4', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid4">215</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid4')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid4', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid4">7</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@Alabanza una mirada de fe</div>
+                <div class="description">Merengue cristiano. ????</div>
+            </div>
+        </div>
+
+
+<!-- ==================== VIDEO 5 ==================== -->
+        <div class="video-card" data-id="vid5">
+            <video src="video/mango.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid3', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid3">540</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid3')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid3', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid3">89</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@musica cristiana</div>
+                <div class="description">Alabanza a Dios</div>
+            </div>
+        </div>
+        
+
+<!-- ==================== VIDEO 6 ==================== -->
+        <div class="video-card" data-id="vid6">
+            <video src="video/mensaje.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid3', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid3">540</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid3')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid3', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid3">89</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@reflexion</div>
+                <div class="description">Hermoso mensaje</div>
+            </div>
+        </div>
+
+
+
+<!-- ==================== VIDEO 7 ==================== -->
+        <div class="video-card" data-id="vid7">
+            <video src="video/che.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid7', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid7">540</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid7')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid7', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid7">89</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@video clip el che</div>
+                <div class="description">Vallenato cristiano</div>
+            </div>
+        </div>
+
+
+
+<!-- ==================== VIDEO 8 ==================== -->
+        <div class="video-card" data-id="vid8">
+            <video src="video/Badabun.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid8', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid8">540</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid8')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid8', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid8">89</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@Reflexion</div>
+                <div class="description">Reflexion</div>
+            </div>
+        </div>
+        
+<!-- ==================== VIDEO 9 ==================== -->
+        <div class="video-card" data-id="vid9">
+            <video src="video/video22.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid9', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid9">540</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid9')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid9', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid9">89</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@Marcos Antonio Solis</div>
+                <div class="description">Video musical </div>
+            </div>
+        </div>
+        
+
+<!-- ==================== VIDEO 10 ==================== -->
+        <div class="video-card" data-id="vid10">
+            <video src="video/mundo.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid3', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid3">540</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid3')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid3', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid3">89</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@terremotos</div>
+                <div class="description">Terremotos</div>
+            </div>
+        </div>
+        
+
+
+
+<!-- ==================== VIDEO 11 ==================== -->
+        <div class="video-card" data-id="vid11">
+            <video src="video/historia.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid11', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid3">260</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid11')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid11', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid3">120</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@Historia generadas por IA</div>
+                <div class="description">Historia generada por IA</div>
+            </div>
+        </div>
+            
+
+<!-- ==================== VIDEO 12 ==================== -->
+        <div class="video-card" data-id="vid12">
+            <video src="video/chiste.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid12', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid12">260</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid12')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid11', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid12">120</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@humor</div>
+                <div class="description">Video de humor</div>
+            </div>
+        </div>
+
+
+
+<!-- ==================== VIDEO 13 ==================== -->
+        <div class="video-card" data-id="vid13">
+            <video src="video/gmail.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid13', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid13">433</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid13')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid13', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid13">321</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@Bloquea correo basura</div>
+                <div class="description">Bloquear correo basura desde tu cuenta</div>
+            </div>
+        </div>
+
+
+        <!-- ==================== VIDEO 14 ==================== -->
+        <div class="video-card" data-id="vid14">
+            <video src="video/medicina.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid14', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid14">574</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid14')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid14', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid14">89</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@Medicina natural</div>
+                <div class="description">Curar la diabetes</div>
+            </div>
+        </div>
+        
+
+<!-- ==================== VIDEO 15 ==================== -->
+        <div class="video-card" data-id="vid15">
+            <video src="video/Publicidad.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid15', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid15">609</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid15')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid15', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid15">48</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@Encuestra facil por Google vive fm online</div>
+                <div class="description">Emisora cristiana vive fm online siempre contigo</div>
+            </div>
+        </div>
+
+
+
+        <!-- ==================== VIDEO 16 ==================== -->
+        <div class="video-card" data-id="vid15">
+            <video src="video/====.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid16', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid16">433</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid16')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid16', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid15">56</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@vacio</div>
+                <div class="description">Vacio</div>
+            </div>
+        </div>
+
+<!-- ==================== VIDEO 17 ==================== -->
+        <div class="video-card" data-id="vid15">
+            <video src="video/====.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid17', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid17">433</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid17')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid17', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid15">56</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@vacio</div>
+                <div class="description">Vacio</div>
+            </div>
+        </div>
+
+
+<!-- ==================== VIDEO 18 ==================== -->
+        <div class="video-card" data-id="vid18">
+            <video src="video/====.mp4" loop unmuted playsinline onclick="playPauseVideo(this)"></video>
+            <div class="side-bar">
+                <button class="action-item" onclick="handleLike('vid18', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="like-count-vid17">433</div>
+                </button>
+                <button class="action-item" onclick="openChat('vid18')">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text">Chat</div>
+                </button>
+                <button class="action-item" onclick="handleShare('vid18', this)">
+                    <div class="icon-circle">??</div>
+                    <div class="count-text" id="share-count-vid18">56</div>
+                </button>
+            </div>
+            <div class="video-info">
+                <div class="username">@vacio</div>
+                <div class="description">Vacio</div>
+            </div>
+        </div>
+        
+
+        
+        
+        
+    </div>
+
+    <!-- CONTENEDOR PEQUEÑO DE CHAT / COMENTARIOS -->
+    <div class="chat-container" id="chat-panel">
+        <div class="chat-header">
+            <span>Comentarios del Video</span>
+            <span class="chat-close" onclick="closeChat()">?</span>
+        </div>
+        <div class="chat-messages" id="chat-messages-box"></div>
+        <div class="chat-input-bar">
+            <input type="text" id="chat-user-input" placeholder="Escribe un comentario público...">
+            <button onclick="sendChatMessage()">Enviar</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    let currentVideoId = null;
+
+    // 1. CONTROL DE PLAY / PAUSA INDIVIDUAL CON UN TOQUE
+    function playPauseVideo(video) {
+        if (video.paused) {
+            video.play();
+        } else {
+            video.pause();
+        }
+    }
+
+    // 2. LÓGICA DEL CORAZONCITO (ME GUSTA)
+    function handleLike(id, buttonElement) {
+        const iconContainer = buttonElement.querySelector('.icon-circle');
+        const countContainer = document.getElementById(`like-count-${id}`);
+        let currentLikes = parseInt(countContainer.innerText);
+        
+        let hasLiked = localStorage.getItem(`liked_${id}`) === 'true';
+
+        if (!hasLiked) {
+            localStorage.setItem(`liked_${id}`, 'true');
+            iconContainer.innerText = "??";
+            countContainer.innerText = currentLikes + 1;
+        } else {
+            localStorage.setItem(`liked_${id}`, 'false');
+            iconContainer.innerText = "??";
+            countContainer.innerText = currentLikes - 1;
+        }
+    }
+
+    // 3. LÓGICA DEL BOTÓN COMPARTIR
+    function handleShare(id, buttonElement) {
+        const countContainer = document.getElementById(`share-count-${id}`);
+        let currentShares = parseInt(countContainer.innerText);
+        
+        countContainer.innerText = currentShares + 1;
+        alert("¡Enlace comercial del video copiado!");
+    }
+
+    // 4. FUNCIONES DEL PANEL DE CHAT (MENSAJERÍA LOCAL)
+    function openChat(id) {
+        currentVideoId = id;
+        document.getElementById('chat-panel').classList.add('active');
+        renderChatMessages();
+    }
+
+    function closeChat() {
+        document.getElementById('chat-panel').classList.remove('active');
+    }
+
+    function renderChatMessages() {
+        const box = document.getElementById('chat-messages-box');
+        box.innerHTML = '';
+        
+        let messages = localStorage.getItem(`chat_${currentVideoId}`) ? JSON.parse(localStorage.getItem(`chat_${currentVideoId}`)) : [];
+        
+        if (messages.length === 0) {
+            box.innerHTML = '<div style="opacity: 0.5; font-size: 0.8rem; text-align: center; margin-top: 20px;">Sé el primero en comentar...</div>';
+            return;
+        }
+
+        messages.forEach(msg => {
+            box.innerHTML += `<div class="msg-bubble">${msg}</div>`;
+        });
+        
+        box.scrollTop = box.scrollHeight;
+    }
+
+    function sendChatMessage() {
+        const input = document.getElementById('chat-user-input');
+        const text = input.value.trim();
+        if (text === "" || !currentVideoId) return;
+
+        let messages = localStorage.getItem(`chat_${currentVideoId}`) ? JSON.parse(localStorage.getItem(`chat_${currentVideoId}`)) : [];
+        messages.push(text);
+        localStorage.setItem(`chat_${currentVideoId}`, JSON.stringify(messages));
+
+        input.value = '';
+        renderChatMessages();
+    }
+
+    // 5. OBSERVADOR PARA CONTROLAR REPRODUCCIÓN AUTOMÁTICA AL DESLIZAR
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            const video = entry.target.querySelector('video');
+            if (video) {
+                if (entry.isIntersecting) {
+                    video.play().catch(() => {});
+                } else {
+                    video.pause();
+                    video.currentTime = 0; 
+                }
+            }
+        });
+    }, { threshold: 0.6 });
+
+    document.querySelectorAll('.video-card').forEach(card => {
+        observer.observe(card);
+    });
+</script>
+
+</body>
+</html>

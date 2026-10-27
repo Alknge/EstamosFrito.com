@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Notas Financieras | Comercial</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            /* Fondo comercial de administración financiera */
+            background: linear-gradient(rgba(0, 104, 109, 0.9), rgba(0, 121, 128, 0.9)), 
+                        url('https://unsplash.com') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .notes-container {
+            width: 100%;
+            max-width: 420px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+            color: white;
+        }
+
+        .header-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+            margin-bottom: 4px;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Formulario de Registro */
+        .note-form {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .input-field {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            padding: 12px;
+            color: white;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .btn-add {
+            background-color: #00ffcc;
+            color: #00686d;
+            border: none;
+            border-radius: 10px;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .btn-add:hover {
+            background-color: #00e6b8;
+        }
+
+        /* Lista de Notas Guardadas */
+        .notes-list {
+            max-height: 220px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            padding-right: 5px;
+        }
+
+        /* Barra de desplazamiento estética */
+        .notes-list::-webkit-scrollbar {
+            width: 5px;
+        }
+        .notes-list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .note-item {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 10px;
+            padding: 12px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-align: left;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .note-details {
+            flex: 1;
+            padding-right: 10px;
+        }
+
+        .note-text {
+            font-size: 0.95rem;
+            font-weight: bold;
+        }
+
+        .note-amount {
+            font-size: 0.85rem;
+            color: #00ffcc;
+            margin-top: 2px;
+        }
+
+        .btn-delete {
+            background: rgba(255, 85, 85, 0.2);
+            border: 1px solid rgba(255, 85, 85, 0.4);
+            color: #ff9999;
+            padding: 6px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.75rem;
+            font-weight: bold;
+            transition: background 0.2s;
+        }
+
+        .btn-delete:hover {
+            background: rgba(255, 85, 85, 0.4);
+        }
+
+        /* Botón de Retorno */
+        .btn-menu {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background-color: #319ba1;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .btn-menu:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+<div class="notes-container">
+    <div class="header-title">Notas Financieras</div>
+    <div class="subtitle">Gestión Personal de Gastos y Balances</div>
+
+    <!-- Formulario para agregar registros -->
+    <div class="note-form">
+        <input type="text" id="note-concept" class="input-field" placeholder="Concepto (ej. Venta de dólares, Pago local...)">
+        <input type="text" id="note-value" class="input-field" placeholder="Monto u Observación (ej. $50 o 1,800 Bs)">
+        <button class="btn-add" onclick="addNote()">?? Guardar Nota</button>
+    </div>
+
+    <!-- Listado Dinámico -->
+    <div class="notes-list" id="notes-wrapper">
+        <!-- Las notas se cargan aquí automáticamente -->
+    </div>
+
+    <!-- Botón Volver -->
+    <a href="pagina2.html" class="btn-menu">
+        ?? Volver al Menú Principal
+    </a>
+</div>
+
+<script>
+    // Cargar notas almacenadas al iniciar la pantalla
+    document.addEventListener("DOMContentLoaded", loadNotes);
+
+    function addNote() {
+        const conceptInput = document.getElementById("note-concept");
+        const valueInput = document.getElementById("note-value");
+
+        const concept = conceptInput.value.trim();
+        const value = valueInput.value.trim();
+
+        if (concept === "" || value === "") {
+            alert("Por favor, rellene ambos campos para archivar el registro.");
+            return;
+        }
+
+        // Estructura de la nota comercial
+        const note = {
+            id: Date.now(),
+            concept: concept,
+            value: value
+        };
+
+        // Obtener lista existente o crear una nueva vacía
+        let notes = localStorage.getItem("financial_notes") ? JSON.parse(localStorage.getItem("financial_notes")) : [];
+        notes.unshift(note); // Agregar al inicio de la lista
+
+        // Guardar de vuelta en LocalStorage
+        localStorage.setItem("financial_notes", JSON.stringify(notes));
+
+        // Limpiar campos de texto del formulario
+        conceptInput.value = "";
+        valueInput.value = "";
+
+        // Refrescar la interfaz visual
+        renderNotes(notes);
+    }
+
+    function loadNotes() {
+        let notes = localStorage.getItem("financial_notes") ? JSON.parse(localStorage.getItem("financial_notes")) : [];
+        renderNotes(notes);
+    }
+
+    function renderNotes(notes) {
+        const wrapper = document.getElementById("notes-wrapper");
+        wrapper.innerHTML = ""; // Vaciar lista actual
+
+        if (notes.length === 0) {
+            wrapper.innerHTML = `<div style="text-align:center; opacity:0.6; font-size:0.85rem; padding: 20px 0;">No hay apuntes financieros registrados.</div>`;
+            return;
+        }
+
+        notes.forEach(note => {
+            wrapper.innerHTML += `
+                <div class="note-item">
+                    <div class="note-details">
+                        <div class="note-text">${note.concept}</div>
+                        <div class="note-amount">${note.value}</div>
+                    </div>
+                    <button class="btn-delete" onclick="deleteNote(${note.id})">Borrar</button>
+                </div>
+            `;
+        });
+    }
+
+    function deleteNote(id) {
+        let notes = localStorage.getItem("financial_notes") ? JSON.parse(localStorage.getItem("financial_notes")) : [];
+        
+        // Filtrar y remover el elemento seleccionado
+        notes = notes.filter(note => note.id !== id);
+        
+        localStorage.setItem("financial_notes", JSON.stringify(notes));
+        renderNotes(notes);
+    }
+</script>
+
+</body>
+</html>

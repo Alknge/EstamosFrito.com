@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel de Control - Tasas del Día</title>
+    <style>
+        :root {
+            --bg-color: #213a3d;
+            --card-color: #2a5356;
+            --text-color: #ffffff;
+            --input-bg: #e9f0f2;
+            --input-text: #1d3537;
+            --btn-green: #2ecc71;
+            --btn-blue: #1abc9c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--card-color);
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 1.6rem;
+            letter-spacing: 0.5px;
+            border-bottom: 2px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        input {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background-color: var(--input-bg);
+            color: var(--input-text);
+            font-size: 1.1rem;
+            font-weight: bold;
+            outline: none;
+            text-align: center;
+        }
+
+        /* Estilos del Switch de Mantenimiento */
+        .switch-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: rgba(0,0,0,0.15);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--btn-green);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        /* Botón Guardar */
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            background-color: var(--btn-blue);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+        }
+
+        .btn-submit:hover {
+            background-color: #16a085;
+        }
+
+        /* Pie de página */
+        footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 20px;
+            width: 100%;
+        }
+
+        /* Notificación de carga */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h2>PANEL DE ADMINISTRACIÓN</h2>
+        
+        <!-- Campo Dólar Hoy -->
+        <div class="form-group">
+            <label>?? Precio Dólar Hoy (Bs)</label>
+            <input type="number" id="dolar_hoy" step="0.01" placeholder="0.00">
+        </div>
+
+        <!-- Campo Dólar Mañana -->
+        <div class="form-group">
+            <label>? Precio Dólar Mañana (Bs)</label>
+            <input type="number" id="dolar_manana" step="0.01" placeholder="0.00">
+        </div>
+
+        <!-- Campo Euro Hoy -->
+        <div class="form-group">
+            <label>?? Precio Euro Hoy (Bs)</label>
+            <input type="number" id="euro_hoy" step="0.01" placeholder="0.00">
+        </div>
+
+        <!-- Campo Fecha de Actualización -->
+        <div class="form-group">
+            <label>?? Fecha/Hora de Actualización</label>
+            <input type="text" id="fecha_actualizacion" placeholder="Ej: 12 oct 2026, 9:06 p. m.">
+        </div>
+
+        <!-- Switch modo Mantenimiento -->
+        <div class="switch-container">
+            <label style="margin: 0;">?? Bloquear App (Mantenimiento)</label>
+            <label class="switch">
+                <input type="checkbox" id="mantenimiento_switch" onchange="toggleMantenimiento()">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <!-- Botón único para guardar precios e historial -->
+        <button class="btn-submit" onclick="guardarDatos()">Guardar Cambios</button>
+    </div>
+
+    <!-- Pantalla de carga invisible -->
+    <div id="loading" class="loading-overlay">
+        <h3>Procesando con la base de datos...</h3>
+    </div>
+
+    <footer>
+        © Estamos fritos.com
+    </footer>
+
+    <script>
+        // REEMPLAZA ESTA URL CON TU ENLACE DE APPS SCRIPT COMPLETADO EN EL PASO ANTERIOR (EL QUE TERMINA EN /exec)
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzw87Jb3Dlhj9ykvHyw51mNNoN1W8wAjITNmKk4QWtGtExwiIakuCy61NY9lyYio_wv/exec";
+
+        // Al cargar la página, traer los datos actuales de Google Sheets automáticamente
+        window.onload = function() {
+            mostrarCarga(true);
+            fetch(`${WEB_APP_URL}?action=read`)
+            .then(response => response.json())
+            .then(data => {
+                const config = data.config;
+                document.getElementById('dolar_hoy').value = config.dolar_hoy || "";
+                document.getElementById('dolar_manana').value = config.dolar_manana || "";
+                document.getElementById('euro_hoy').value = config.euro_hoy || "";
+                document.getElementById('fecha_actualizacion').value = config.fecha_actualizacion || "";
+                document.getElementById('mantenimiento_switch').checked = (config.mantenimiento == "1");
+                mostrarCarga(false);
+            })
+            .catch(error => {
+                mostrarCarga(false);
+                alert("Error al cargar los datos de la base de datos.");
+            });
+        };
+
+        // Función para guardar los precios y crear fila en el Historial
+        function guardarDatos() {
+            const dolarHoy = document.getElementById('dolar_hoy').value;
+            const dolarManana = document.getElementById('dolar_manana').value;
+            const euroHoy = document.getElementById('euro_hoy').value;
+            const fechaAct = document.getElementById('fecha_actualizacion').value;
+            const mant = document.getElementById('mantenimiento_switch').checked ? "1" : "0";
+
+            if (!dolarHoy || !dolarManana || !euroHoy || !fechaAct) {
+                alert("Por favor rellene todos los campos antes de guardar.");
+                return;
+            }
+
+            mostrarCarga(true);
+            
+            const url = `${WEB_APP_URL}?action=update&dolar_hoy=${dolarHoy}&dolar_manana=${dolarManana}&euro_hoy=${euroHoy}&fecha_actualizacion=${encodeURIComponent(fechaAct)}&mantenimiento=${mant}&is_switch=false`;
+
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                mostrarCarga(false);
+                if(data.status === "success") {
+                    alert("¡Precios actualizados e Historial registrado con éxito!");
+                }
+            })
+            .catch(error => {
+                mostrarCarga(false);
+                alert("Error al guardar los datos.");
+            });
+        }
+
+        // Función automática para el Switch de mantenimiento (No genera historial)
+        function toggleMantenimiento() {
+            const dolarHoy = document.getElementById('dolar_hoy').value;
+            const dolarManana = document.getElementById('dolar_manana').value;
+            const euroHoy = document.getElementById('euro_hoy').value;
+            const fechaAct = document.getElementById('fecha_actualizacion').value;
+            const mant = document.getElementById('mantenimiento_switch').checked ? "1" : "0";
+
+            mostrarCarga(true);
+
+            const url = `${WEB_APP_URL}?action=update&dolar_hoy=${dolarHoy}&dolar_manana=${dolarManana}&euro_hoy=${euroHoy}&fecha_actualizacion=${encodeURIComponent(fechaAct)}&mantenimiento=${mant}&is_switch=true`;
+
+            fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                mostrarCarga(false);
+                if(data.status !== "success") {
+                    alert("No se pudo cambiar el estado de mantenimiento.");
+                }
+})
+.catch(error => {
+mostrarCarga(false);
+alert("Error de conexión al mover el Switch.");
+});
+}
+function mostrarCarga(ver) {
+document.getElementById('loading').style.display = ver ? 'flex' : 'none';
+}
+</script>
+</body>
+</HTML>

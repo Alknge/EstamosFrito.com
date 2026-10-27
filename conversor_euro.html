@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor Euro a Bolívares</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(0, 104, 109, 0.9), rgba(0, 121, 128, 0.9)), 
+                        url('https://unsplash.com') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .calc-box {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+            color: white;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        /* Selector de sentido de cambio */
+        .direction-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .dir-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dir-btn.active {
+            background: #00ffcc;
+            color: #00686d;
+            border-color: #00ffcc;
+        }
+
+        /* Pantalla de visualización */
+        .screen-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .display-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .display-row:last-child {
+            margin-bottom: 0;
+            padding-top: 8px;
+            border-top: 1px dashed rgba(255,255,255,0.2);
+        }
+
+        .currency-label {
+            font-size: 1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .num-input {
+            background: transparent;
+            border: none;
+            color: #00ffcc;
+            font-size: 1.6rem;
+            font-weight: bold;
+            text-align: right;
+            width: 70%;
+            outline: none;
+        }
+
+        .result-text {
+            color: #ffffff;
+            font-size: 1.6rem;
+            font-weight: bold;
+            text-align: right;
+            width: 70%;
+        }
+
+        .rate-footer {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        /* Botón Compartir WhatsApp */
+        .btn-whatsapp {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            width: 100%;
+            background-color: #25D366;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 11px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            margin-bottom: 12px;
+            transition: background 0.2s;
+        }
+
+        .btn-whatsapp:hover {
+            background-color: #20ba5a;
+        }
+
+        /* Teclado numérico integrado */
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .key {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .key:active {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Botón de Retorno */
+        .btn-menu {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background-color: #319ba1;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .btn-menu:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+<div class="calc-box">
+    <div class="title">Conversor a Euro</div>
+
+    <!-- Modos de sentido de Cambio -->
+    <div class="direction-selector">
+        <button class="dir-btn active" id="btn-eur-to-bs" onclick="setDirection('EUR_TO_BS')">
+            ?? Cambiar Euros a Bs
+        </button>
+        <button class="dir-btn" id="btn-bs-to-eur" onclick="setDirection('BS_TO_EUR')">
+            ???? Cambiar Bs a Euros
+        </button>
+    </div>
+
+    <!-- Pantalla del Conversor -->
+    <div class="screen-container">
+        <div class="display-row">
+            <span class="currency-label" id="label-input">?? EUR:</span>
+            <input type="text" id="amount-input" class="num-input" value="0" readonly>
+        </div>
+        <div class="display-row">
+            <span class="currency-label" id="label-output">???? Bs:</span>
+            <div id="amount-output" class="result-text">0.00</div>
+        </div>
+    </div>
+
+        <div class="rate-footer">
+        <!-- El ID se movió aquí para actualizar todo el texto incluyendo los Bs de forma limpia -->
+        Tasa de conversión de referencia: <b id="tasa-referencia-eur">1 EUR = 0.00 Bs</b>
+    </div>
+    
+
+    <!-- Botón Comercial de Envío WhatsApp -->
+    <a href="#" id="whatsapp-share-btn" target="_blank" class="btn-whatsapp" onclick="shareOnWhatsApp(event)">
+        ??  WhatsApp no activo
+    </a>
+
+    <!-- Teclado Numérico Directo -->
+    <div class="keyboard">
+        <div class="key" onclick="pressNum('1')">1</div>
+        <div class="key" onclick="pressNum('2')">2</div>
+        <div class="key" onclick="pressNum('3')">3</div>
+        <div class="key" onclick="pressNum('4')">4</div>
+        <div class="key" onclick="pressNum('5')">5</div>
+        <div class="key" onclick="pressNum('6')">6</div>
+        <div class="key" onclick="pressNum('7')">7</div>
+        <div class="key" onclick="pressNum('8')">8</div>
+        <div class="key" onclick="pressNum('9')">9</div>
+        <div class="key" onclick="pressClear()">C</div>
+        <div class="key" onclick="pressNum('0')">0</div>
+        <div class="key" onclick="pressNum('.')">.</div>
+    </div>
+
+    <!-- Botón Volver -->
+    <a href="pagina2.html" class="btn-menu">
+        ?? Volver al Menú Principal
+    </a>
+</div>
+
+<script>
+     // 1. COLOCA AQUÍ TU URL DE EXEC DE APPS SCRIPT
+    const APPS_SCRIPT_URL_EUR = "https://script.google.com/macros/s/AKfycbzw87Jb3Dlhj9ykvHyw51mNNoN1W8wAjITNmKk4QWtGtExwiIakuCy61NY9lyYio_wv/exec";
+    
+    // Valor base que se actualizará automáticamente desde Google Sheets
+    let TASA_EURO = 0.00; 
+    let currentDirection = 'EUR_TO_BS';
+
+    // 2. Conectar directo por URL con Apps Script para obtener la tasa del Euro en tiempo real
+    window.addEventListener('DOMContentLoaded', () => {
+        fetch(`${APPS_SCRIPT_URL_EUR}?action=read`)
+        .then(response => response.json())
+        .then(data => {
+            const config = data.config;
+            
+            // Sincronizar la variable matemática con el Euro de tu Google Sheets
+            TASA_EURO = parseFloat(config.euro_hoy) || 0.00;
+            
+            // Actualizar la etiqueta del precio de referencia en tu HTML
+            const lblTasaRef = document.getElementById('tasa-referencia-eur');
+            if (lblTasaRef) {
+                lblTasaRef.innerText = `1 EUR = ${TASA_EURO.toFixed(2)} Bs`;
+            }
+
+            // Opcional: Actualizar la fecha si tienes esta etiqueta en pantalla
+            const lblFecha = document.getElementById('fecha-actualizacion-eur');
+            if (lblFecha) {
+                lblFecha.innerText = "Última actualización: " + config.fecha_actualizacion;
+            }
+            
+            // Si ya hay un número puesto, recalcular de inmediato
+            const inputElement = document.getElementById('amount-input');
+            if (inputElement && inputElement.value !== '0') {
+                autoConvert(parseFloat(inputElement.value));
+            }
+        })
+        .catch(error => {
+            console.error("Error conectando el conversor de Euros con Apps Script:", error);
+        });
+    });
+
+    // Cambiar sentido al pulsar los botones superiores (EUR->Bs o Bs->EUR)
+    function setDirection(direction) {
+        currentDirection = direction;
+        
+        document.getElementById('btn-eur-to-bs').classList.remove('active');
+        document.getElementById('btn-bs-to-eur').classList.remove('active');
+        
+        if(direction === 'EUR_TO_BS') {
+            document.getElementById('btn-eur-to-bs').classList.add('active');
+            document.getElementById('label-input').innerText = "?? EUR:";
+            document.getElementById('label-output').innerText = "???? Bs:";
+        } else {
+            document.getElementById('btn-bs-to-eur').classList.add('active');
+            document.getElementById('label-input').innerText = "???? Bs:";
+            document.getElementById('label-output').innerText = "?? EUR:";
+        }
+        
+        pressClear();
+    }
+
+    // Función vinculada a tu teclado numérico en pantalla
+    function pressNum(num) {
+        const inputElement = document.getElementById('amount-input');
+        let currentVal = inputElement.value;
+
+        if (num === '.' && currentVal.includes('.')) return;
+
+        if (currentVal === '0' && num !== '.') {
+            currentVal = num;
+        } else {
+            currentVal += num;
+        }
+
+        inputElement.value = currentVal;
+        autoConvert(parseFloat(currentVal));
+    }
+
+    // Limpiar campos de la pantalla
+    function pressClear() {
+        document.getElementById('amount-input').value = '0';
+        document.getElementById('amount-output').innerText = '0.00';
+    }
+
+    // Conversor matemático automático e inmediato con la tasa de la base de datos
+    function autoConvert(val) {
+        const outputElement = document.getElementById('amount-output');
+        if (!outputElement) return;
+
+        if (isNaN(val) || val <= 0) {
+            outputElement.innerText = '0.00';
+            return;
+        }
+
+        let result = 0;
+        if (currentDirection === 'EUR_TO_BS') {
+            result = val * TASA_EURO; // Multiplica de Euro a Bolívar
+        } else {
+            result = val / TASA_EURO; // Divide de Bolívar a Euro
+        }
+
+        outputElement.innerText = result.toFixed(2);
+    }
+
+    // Compartir por WhatsApp con formato comercial limpio (Corregido y sincronizado)
+    function shareOnWhatsApp(event) {
+        const inputVal = document.getElementById('amount-input').value;
+        const outputVal = document.getElementById('amount-output').innerText;
+
+        if (parseFloat(inputVal) <= 0 || outputVal === "0.00") {
+            event.preventDefault();
+            alert("Por favor, ingrese un monto válido primero antes de enviar.");
+            return;
+        }
+
+        let message = "";
+        if (currentDirection === 'EUR_TO_BS') {
+            message = `*Estamos fritos.com* ????%0A%0A*Conversión Realizada:*%0A?? Monto: *${inputVal} EUR*%0A?? Equivalente: *${outputVal} Bs*%0A?? Tasa Ref: ${TASA_EURO.toFixed(2)} Bs por Euro.%0A%0A_¡Gracias por usar nuestro servicio!_`;
+        } else {
+            message = `*Estamos fritos.com* ????%0A%0A*Conversión Realizada:*%0A?? Monto: *${inputVal} Bs*%0A?? Equivalente: *${outputVal} EUR*%0A?? Tasa Ref: ${TASA_EURO.toFixed(2)} Bs por Euro.%0A%0A_¡Gracias por usar nuestro servicio!_`;
+        }
+
+        // Enlace optimizado para funcionar en cualquier dispositivo móvil o PC sin bloqueos
+        document.getElementById('whatsapp-share-btn').href = `https://wa.me{message}`;
+    }
+    
+ 
+ 
+</script>
+
+</body>
+</html>

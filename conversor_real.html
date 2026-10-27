@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor Fácil a Real Brasileño</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(0, 104, 109, 0.9), rgba(0, 121, 128, 0.9)), 
+                        url('https://unsplash.com') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .calc-box {
+            width: 100%;
+            max-width: 400px;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 20px;
+            padding: 18px;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+            color: white;
+            text-align: center;
+        }
+
+        .title {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+        }
+
+        /* Selector de sentido de cambio comercial */
+        .direction-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .dir-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .dir-btn.active {
+            background: #00ffcc;
+            color: #00686d;
+            border-color: #00ffcc;
+        }
+
+        /* Pantalla de Montos */
+        .screen-container {
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+            padding: 12px;
+            margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .display-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .display-row:last-child {
+            margin-bottom: 0;
+            padding-top: 8px;
+            border-top: 1px dashed rgba(255,255,255,0.2);
+        }
+
+        .currency-label {
+            font-size: 1rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .num-input {
+            background: transparent;
+            border: none;
+            color: #00ffcc;
+            font-size: 1.6rem;
+            font-weight: bold;
+            text-align: right;
+            width: 70%;
+            outline: none;
+        }
+
+        .result-text {
+            color: #ffffff;
+            font-size: 1.6rem;
+            font-weight: bold;
+            text-align: right;
+            width: 70%;
+        }
+
+        .rate-footer {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            margin-bottom: 12px;
+            text-align: center;
+        }
+
+        /* Teclado numérico integrado */
+        .keyboard {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 15px;
+        }
+
+        .key {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.3rem;
+            font-weight: bold;
+            padding: 12px;
+            border-radius: 10px;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.1s;
+        }
+
+        .key:active {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        .key.clear {
+            background: rgba(255, 85, 85, 0.3);
+            color: #ff9999;
+        }
+        
+        .key.clear:active {
+            background: rgba(255, 85, 85, 0.5);
+        }
+
+        /* Botón de Retorno */
+        .btn-menu {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background-color: #319ba1;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .btn-menu:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+<div class="calc-box">
+    <div class="title">Conversor a Reales</div>
+
+    <!-- Sentido de Cambio Directo -->
+    <div class="direction-selector">
+        <button class="dir-btn active" id="btn-real-to-bs" onclick="setDirection('BRL_TO_BS')">
+            ???? Cambiar Reales a Bs
+        </button>
+        <button class="dir-btn" id="btn-bs-to-real" onclick="setDirection('BS_TO_BRL')">
+            ???? Cambiar Bs a Reales
+        </button>
+    </div>
+
+    <!-- Pantalla del Cajero -->
+    <div class="screen-container">
+        <div class="display-row">
+            <span class="currency-label" id="label-input">???? BRL (Real):</span>
+            <input type="text" id="amount-input" class="num-input" value="0" readonly>
+        </div>
+        <div class="display-row">
+            <span class="currency-label" id="label-output">???? Bs:</span>
+            <div id="amount-output" class="result-text">0.00</div>
+        </div>
+    </div>
+
+    <div class="rate-footer">
+        Tasa de conversión fija: <b id="current-rate-text">1 BRL = 149.26 Bs</b>
+    </div>
+
+    <!-- Teclado Numérico Directo -->
+    <div class="keyboard">
+        <div class="key" onclick="pressNum('1')">1</div>
+        <div class="key" onclick="pressNum('2')">2</div>
+        <div class="key" onclick="pressNum('3')">3</div>
+        <div class="key" onclick="pressNum('4')">4</div>
+        <div class="key" onclick="pressNum('5')">5</div>
+        <div class="key" onclick="pressNum('6')">6</div>
+        <div class="key" onclick="pressNum('7')">7</div>
+        <div class="key" onclick="pressNum('8')">8</div>
+        <div class="key" onclick="pressNum('9')">9</div>
+        <div class="key " onclick="pressClear()">C</div>
+        <div class="key" onclick="pressNum('0')">0</div>
+        <div class="key" onclick="pressNum('.')">.</div>
+    </div>
+
+    <!-- Botón Volver -->
+    <a href="pagina2.html" class="btn-menu">
+        ?? Volver al Menú Principal
+    </a>
+</div>
+
+<script>
+    // Valor estimado de referencia del Real frente al Bolívar (00.00 Bs por Real)
+    const TASA_REAL = 152.27; 
+    let currentDirection = 'BRL_TO_BS';
+
+    function setDirection(direction) {
+        currentDirection = direction;
+        
+        document.getElementById('btn-real-to-bs').classList.remove('active');
+        document.getElementById('btn-bs-to-real').classList.remove('active');
+        
+        if(direction === 'BRL_TO_BS') {
+            document.getElementById('btn-real-to-bs').classList.add('active');
+            document.getElementById('label-input').innerText = "???? BRL (Real):";
+            document.getElementById('label-output').innerText = "???? Bs:";
+        } else {
+            document.getElementById('btn-bs-to-real').classList.add('active');
+            document.getElementById('label-input').innerText = "???? Bs:";
+            document.getElementById('label-output').innerText = "???? BRL (Real):";
+        }
+        
+        pressClear();
+    }
+
+    function pressNum(num) {
+        const inputElement = document.getElementById('amount-input');
+        let currentVal = inputElement.value;
+
+        if (num === '.' && currentVal.includes('.')) return;
+
+        if (currentVal === '0' && num !== '.') {
+            currentVal = num;
+        } else {
+            currentVal += num;
+        }
+
+        inputElement.value = currentVal;
+        autoConvert(parseFloat(currentVal));
+    }
+
+    function pressClear() {
+        document.getElementById('amount-input').value = '0';
+        document.getElementById('amount-output').innerText = '0.00';
+    }
+
+    // Lógica de conversión instantánea a nivel local
+    function autoConvert(val) {
+        if (isNaN(val) || val <= 0) {
+            document.getElementById('amount-output').innerText = '0.00';
+            return;
+        }
+
+        let result = 0;
+        if (currentDirection === 'BRL_TO_BS') {
+            result = val * TASA_REAL;
+        } else {
+            result = val / TASA_REAL;
+        }
+
+        document.getElementById('amount-output').innerText = result.toFixed(2);
+    }
+</script>
+
+</body>
+</html>

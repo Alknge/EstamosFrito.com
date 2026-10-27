@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Historial de Tasas Pasadas</title>
+    <style>
+        :root {
+            --bg-color: #213a3d;
+            --card-color: #2a5356;
+            --text-color: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.7);
+            --border-color: rgba(255, 255, 255, 0.15);
+            --accent-color: #1abc9c;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background-color: var(--card-color);
+            padding: 25px;
+            border-radius: 24px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            margin-top: auto;
+            margin-bottom: auto;
+        }
+
+        .header-historial {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 12px;
+        }
+
+        .btn-volver {
+            background: none;
+            border: 1px solid var(--border-color);
+            color: var(--text-color);
+            padding: 6px 14px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.3s;
+        }
+
+        .btn-volver:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        h2 {
+            font-size: 1.3rem;
+            letter-spacing: 0.5px;
+        }
+
+        /* Contenedor de la lista scrollable */
+        .historial-lista {
+            max-height: 400px;
+            overflow-y: auto;
+            padding-right: 5px;
+        }
+
+        /* Estilo de la barra de scroll */
+        .historial-lista::-webkit-scrollbar {
+            width: 6px;
+        }
+        .historial-lista::-webkit-scrollbar-thumb {
+            background-color: var(--border-color);
+            border-radius: 10px;
+        }
+
+        /* Fila de registro individual */
+        .historial-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 10px;
+            border-bottom: 1px solid var(--border-color);
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .historial-item:last-child {
+            border-bottom: none;
+        }
+
+        .item-fecha {
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .item-precios {
+            text-align: right;
+        }
+
+        .precio-divisa {
+            font-size: 0.95rem;
+            font-weight: 600;
+        }
+        
+        .precio-divisa span {
+            color: var(--accent-color);
+        }
+
+        /* Mensaje de carga y lista vacía */
+        .status-msg {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-muted);
+            font-style: italic;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        footer {
+            text-align: center;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 20px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="header-historial">
+            <h2>HISTORIAL DE TASAS</h2>
+            <!-- Cambia 'page.html' por el nombre de tu archivo de menú si es diferente -->
+            <button class="btn-volver" onclick="window.location.href='pagina2.html'">? Volver</button>
+        </div>
+
+        <!-- Contenedor dinámico donde se cargarán las filas de la base de datos -->
+        <div id="lista-contenedor" class="historial-lista">
+            <div id="status" class="status-msg">Consultando base de datos...</div>
+        </div>
+    </div>
+
+    <footer>
+        © Estamos fritos.com
+    </footer>
+
+    <script>
+        // REEMPLAZA CON LA MISMA URL DE TU APPS SCRIPT (/exec)
+        const URL_API_SST = "https://script.google.com/macros/s/AKfycbzw87Jb3Dlhj9ykvHyw51mNNoN1W8wAjITNmKk4QWtGtExwiIakuCy61NY9lyYio_wv/exec";
+
+        window.addEventListener('DOMContentLoaded', () => {
+            cargarHistorialCompleto();
+        });
+
+        function cargarHistorialCompleto() {
+            const contenedor = document.getElementById('lista-contenedor');
+            const statusMsg = document.getElementById('status');
+
+            fetch(`${URL_API_SST}?action=read`)
+            .then(response => response.json())
+            .then(data => {
+                const registros = data.historial;
+
+                if (!registros || registros.length === 0) {
+                    statusMsg.innerText = "No hay registros anteriores en el historial.";
+                    return;
+                }
+
+                // Limpiar mensaje de carga
+                contenedor.innerHTML = "";
+
+                // Recorrer y construir las filas dinámicas con los datos de Google Sheets
+                registros.forEach(item => {
+                    const divItem = document.createElement('div');
+                    divItem.className = 'historial-item';
+
+                    divItem.innerHTML = `
+                        <div class="item-fecha">?? ${item.fecha}</div>
+                        <div class="item-precios">
+                            <div class="precio-divisa">?? $: <span>${parseFloat(item.dolar).toFixed(2)} Bs</span></div>
+                            <div class="precio-divisa">?? €: <span>${parseFloat(item.euro).toFixed(2)} Bs</span></div>
+                        </div>
+                    `;
+                    contenedor.appendChild(divItem);
+                });
+            })
+            .catch(error => {
+                console.error("Error al leer el historial:", error);
+                statusMsg.innerText = "Error de conexión con la base de datos.";
+            });
+        }
+    </script>
+</body>
+</html>

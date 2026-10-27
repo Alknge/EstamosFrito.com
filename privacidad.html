@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Privacidad y Normas | Estamos fritos</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(rgba(0, 104, 109, 0.92), rgba(0, 121, 128, 0.92)), 
+                        url('https://unsplash.com') no-repeat center center fixed;
+            background-size: cover;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 12px;
+        }
+
+        .legal-container {
+            width: 100%;
+            max-width: 440px;
+            background: rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 22px;
+            padding: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            max-height: 90vh; /* Evita que se salga de la pantalla del móvil */
+        }
+
+        .header-title {
+            font-size: 1.4rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            text-align: center;
+            margin-bottom: 4px;
+            color: #00ffcc;
+        }
+
+        .subtitle {
+            font-size: 0.8rem;
+            opacity: 0.8;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        /* Área de lectura con scroll interno para móviles */
+        .legal-content {
+            flex: 1;
+            overflow-y: auto;
+            text-align: left;
+            padding-right: 8px;
+            margin-bottom: 15px;
+        }
+
+        .legal-content::-webkit-scrollbar {
+            width: 5px;
+        }
+        .legal-content::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 10px;
+        }
+
+        .section-title {
+            font-size: 0.95rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #00ffcc;
+            margin-top: 15px;
+            margin-bottom: 6px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            padding-bottom: 2px;
+        }
+
+        p, li {
+            font-size: 0.85rem;
+            line-height: 1.4;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        ul {
+            margin-left: 15px;
+            margin-bottom: 10px;
+        }
+
+        /* Bloque Destacado de Versión Plus */
+        .plus-box {
+            background: rgba(0, 255, 204, 0.1);
+            border: 1px dashed #00ffcc;
+            border-radius: 12px;
+            padding: 12px;
+            margin-top: 15px;
+            margin-bottom: 5px;
+            text-align: center;
+        }
+
+        .plus-box h4 {
+            color: #00ffcc;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+
+        /* Botón de Retorno Comercial */
+        .btn-menu {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            background-color: #319ba1;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            padding: 12px;
+            font-size: 1rem;
+            font-weight: bold;
+            text-decoration: none;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            transition: background 0.2s;
+        }
+
+        .btn-menu:active {
+            transform: scale(0.98);
+        }
+    </style>
+</head>
+<body>
+
+<div class="legal-container">
+    <div class="header-title">Seguridad y Normas</div>
+    <div class="subtitle">Términos Legales y Directrices de Uso</div>
+
+    <!-- CUERPO LEGAL DESLIZABLE -->
+    <div class="legal-content">
+        
+        <div class="section-title">1. Propiedad Intelectual</div>
+        <p>Esta aplicación web ha sido diseñada y desarrollada bajo la estricta titularidad y derecho propietario de su creador independiente. Queda estrictamente prohibida la copia, reproducción, modificación, distribución o plagio parcial o total de este código fuente, interfaz visual o lógica de negocio sin el consentimiento expreso y por escrito del desarrollador.</p>
+        <p>Cualquier uso no autorizado del software será considerado una infracción de los derechos de propiedad intelectual del autor.</p>
+
+        <div class="section-title">2. Normas de la Aplicación</div>
+        <p>Para garantizar una operatividad comercial óptima y un entorno seguro para todos los usuarios de la plataforma, se establecen las siguientes directrices de cumplimiento obligatorio:</p>
+        <ul>
+            <li><b>Uso Informativo:</b> Los datos de conversión monetaria y tasas provistos en el sistema son exclusivamente de carácter referencial.</li>
+            <li><b>Integridad del Software:</b> No se permite la inyección de scripts externos, manipulación del código en entornos locales de distribución pública o intentos de ingeniería inversa.</li>
+            <li><b>Módulo de Videos:</b> El material multimedia cargado o visualizado de forma local en la aplicación no debe infringir derechos de terceros ni contener elementos ofensivos.</li>
+            <li><b>Uso de Datos:</b> La aplicación no almacena ni comercializa información personal de los usuarios en servidores remotos externos; toda la información introducida se procesa a nivel local.</li>
+        </ul>
+
+        <div class="section-title">3. Licencia de Operación</div>
+        <p>Al utilizar este software, usted acepta no utilizar sus herramientas de cálculo ni su sección multimedia para fines ilícitos o comerciales fraudulentos que alteren la transparencia del ecosistema financiero local o internacional.</p>
+
+        <!-- BLOQUE COMERCIAL DE SOLICITUD VERSIÓN PLUS -->
+        <div class="plus-box">
+            <h4>? Adquirir Versión Plus</h4>
+            <p>Aquellas personas o empresas que deseen obtener los beneficios y las funciones avanzadas de la <b>Aplicación Plus</b> deben comunicarse directamente con el desarrollador propietario para recibir más información, tarifas corporativas y asesoría comercial dedicada.</p>
+        </div>
+
+    </div>
+
+    <!-- BOTÓN VOLVER -->
+    <a href="pagina2.html" class="btn-menu">
+        ?? Volver al Menú Principal
+    </a>
+</div>
+
+</body>
+</html>
