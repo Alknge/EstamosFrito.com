@@ -1,0 +1,183 @@
+<!-- CONTENEDOR ESTILO WHATSAPP PREMIUM 3D CON DEGRADADOS -->
+<div id="comunidad-chat" style="max-width: 480px; margin: 20px auto; padding: 0; border-radius: 24px; background: linear-gradient(135deg, #efeae2 0%, #e5ddd5 100%); box-shadow: 0 20px 40px rgba(0,0,0,0.15); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; border: 1px solid rgba(255,255,255,0.4); box-sizing: border-box; overflow: hidden; position: relative;">
+  
+  <!-- BARRA SUPERIOR (HEADER ESTILO WHATSAPP CON BOTÓN DE REGRESO) -->
+  <div style="background: linear-gradient(135deg, #00a884 0%, #008069 100%); padding: 16px 16px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 15px rgba(0,128,105,0.25); border-bottom: 1px solid rgba(255,255,255,0.15); position: relative; z-index: 10;">
+    <div style="display: flex; align-items: center; gap: 8px;">
+
+
+   <!-- Botón de Regreso 3D (Flecha de WhatsApp a pagina2.html) -->
+      <a href="pagina2.html" style="background: rgba(255,255,255,0.15); border: none; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; transition: all 0.2s; box-shadow: inset 0 1px 2px rgba(255,255,255,0.2); text-decoration: none; outline: none;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.2));">
+          <line x1="19" y1="12" x2="5" y2="12"></line>
+          <polyline points="12 19 5 12 12 5"></polyline>
+        </svg>
+      </a>
+      
+      <div style="width: 42px; height: 42px; background: linear-gradient(135deg, #25d366 0%, #075e54 100%); border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 8px rgba(0,0,0,0.15), inset 0 2px 4px rgba(255,255,255,0.3); border: 1px solid rgba(255,255,255,0.2);">
+        <span style="font-size: 1.3rem; filter: drop-shadow(0 2px 2px rgba(0,0,0,0.2));">💬</span>
+      </div>
+      <div>
+        <h3 style="margin: 0; color: #ffffff; font-size: 1.05rem; font-weight: 600; letter-spacing: 0.3px; text-shadow: 0 1px 2px rgba(0,0,0,0.2);">Chat de Lectores</h3>
+        <span style="color: rgba(255,255,255,0.9); font-size: 0.75rem; display: flex; align-items: center; gap: 5px; font-weight: 500; margin-top: 1px;">
+          <span style="width: 7px; height: 7px; background: #25d366; border-radius: 50%; display: inline-block; box-shadow: 0 0 8px #25d366; animation: whatsapp-pulse 2s infinite;"></span> en línea ahora
+        </span>
+      </div>
+    </div>
+    
+    <!-- Ícono de Campanita de Notificaciones -->
+    <button id="btn-notificaciones" style="background: rgba(255,255,255,0.15); border: none; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: white; transition: all 0.2s; box-shadow: inset 0 1px 2px rgba(255,255,255,0.2); outline: none;" onmouseover="this.style.background='rgba(255,255,255,0.25)'" onmouseout="this.style.background='rgba(255,255,255,0.15)'" onclick="alert('¡Notificaciones activadas!')">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="filter: drop-shadow(0 2px 3px rgba(0,0,0,0.15));">
+        <path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1-1-1s-1 .17-1 1v.68C8.63 5.36 7 7.92 7 11v5l-2 2v1h14v-1l-2-2z"/>
+      </svg>
+    </button>
+  </div>
+
+  <!-- PANEL DE REACCIONES EN 3D (CROMADO / FULL COLOR) -->
+  <div style="background: rgba(255, 255, 255, 0.6); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); margin: 14px 16px 4px 16px; padding: 10px 14px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.5); box-shadow: 0 8px 25px rgba(0,0,0,0.03); position: relative; z-index: 5;">
+    <span style="font-size: 0.78rem; font-weight: 700; color: #54656f; text-transform: uppercase; letter-spacing: 0.6px;">Reacciones de la Sala</span>
+    
+    <div style="display: flex; gap: 12px;">
+      <!-- Corazón 3D -->
+      <button id="btn-corazon" onclick="reaccionar('Corazon')" style="background: linear-gradient(135deg, #ff5e62 0%, #ff1e56 100%); color: white; border: none; padding: 7px 14px; border-radius: 20px; font-weight: 700; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; box-shadow: 0 5px 12px rgba(255,30,86,0.35), inset 0 2px 3px rgba(255,255,255,0.4); border-bottom: 3.5px solid #b30030; transition: all 0.1s; outline: none;" onmousedown="this.style.transform='translateY(2px)'; this.style.borderBottomWidth='1px'; this.style.boxShadow='0 2px 5px rgba(255,30,86,0.2)';" onmouseup="this.style.transform='translateY(0)'; this.style.borderBottomWidth='3.5px'; this.style.boxShadow='0 5px 12px rgba(255,30,86,0.35)';">
+        <span style="filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3)); font-size: 1.05rem;">❤️</span> <span id="txt-corazones" style="text-shadow: 0 1px 2px rgba(0,0,0,0.3);">0</span>
+      </button>
+      
+      <!-- Guiño 3D Full Color -->
+      <button id="btn-guino" onclick="reaccionar('Guino')" style="background: linear-gradient(135deg, #ffdb4d 0%, #ffa600 100%); color: #4a3300; border: none; padding: 7px 14px; border-radius: 20px; font-weight: 700; cursor: pointer; font-size: 0.85rem; display: flex; align-items: center; gap: 6px; box-shadow: 0 5px 12px rgba(255,166,0,0.35), inset 0 2px 3px rgba(255,255,255,0.6); border-bottom: 3.5px solid #b37400; transition: all 0.1s; outline: none;" onmousedown="this.style.transform='translateY(2px)'; this.style.borderBottomWidth='1px'; this.style.boxShadow='0 2px 5px rgba(255,166,0,0.2)';" onmouseup="this.style.transform='translateY(0)'; this.style.borderBottomWidth='3.5px'; this.style.boxShadow='0 5px 12px rgba(255,166,0,0.35)';">
+        <span style="filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2)); font-size: 1.15rem; line-height: 1;">😉</span> <span id="txt-guinos" style="text-shadow: 0 1px 1px rgba(255,255,255,0.4);">0</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- HISTORIAL DE CHAT CON BURBUJAS ASIMÉTRICAS WHATSAPP -->
+  <div id="historial-chat" style="height: 290px; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px; margin-bottom: 0; box-sizing: border-box; position: relative; scroll-behavior: smooth;">
+    <p style="color: #667781; text-align: center; font-size: 0.82rem; margin: auto 0; background: rgba(255,255,255,0.85); padding: 8px 16px; border-radius: 10px; align-self: center; box-shadow: 0 2px 5px rgba(0,0,0,0.05); font-weight: 500; border: 1px solid rgba(0,0,0,0.02);">🔒 Conectando de forma segura al chat...</p>
+  </div>
+
+  <!-- FORMULARIO DE ENTRADA SUPERIOR E INFERIOR -->
+  <div style="background: #f0f2f5; padding: 12px 16px 16px 16px; display: flex; flex-direction: column; gap: 10px; border-top: 1px solid #e9edef; box-shadow: 0 -4px 15px rgba(0,0,0,0.03);">
+    
+    <!-- Identificador de Apodo Avanzado -->
+    <div style="position: relative; display: flex; align-items: center;">
+      <span style="position: absolute; left: 14px; font-size: 0.95rem; color: #00a884; font-weight: bold; filter: drop-shadow(0 1px 0px white);">@</span>
+      <input type="text" id="apodo-usuario" placeholder="Tu_Apodo_Comercial" maxlength="15" style="width: 100%; padding: 10px 12px 10px 32px; border: 1px solid #e9edef; border-radius: 12px; font-size: 0.88rem; outline: none; box-sizing: border-box; background-color: #ffffff; color: #3b4a54; font-weight: 600; box-shadow: inset 0 1px 3px rgba(0,0,0,0.06); transition: all 0.2s;" onfocus="this.style.borderColor='#00a884'; this.style.boxShadow='0 0 0 3px rgba(0,168,132,0.15)'" onblur="this.style.borderColor='#e9edef'; this.style.boxShadow='none'">
+    </div>
+    
+    <!-- Input de Mensaje Redondeado + Botón de Envío Esférico -->
+    <div style="display: flex; align-items: center; gap: 10px; width: 100%;">
+      <div style="flex-grow: 1; min-width: 0; background: #ffffff; border-radius: 24px; padding: 2px 6px 2px 16px; display: flex; align-items: center; border: 1px solid #e9edef; box-shadow: 0 2px 6px rgba(0,0,0,0.04); transition: all 0.2s;" id="container-msg">
+        <input type="text" id="mensaje-usuario" placeholder="Escribe un mensaje público..." maxlength="100" style="width: 100%; border: none; padding: 12px 0; font-size: 0.95rem; outline: none; background: transparent; color: #3b4a54;" onfocus="document.getElementById('container-msg').style.borderColor='#00a884'" onblur="document.getElementById('container-msg').style.borderColor='#e9edef'">
+      </div>
+      
+      <!-- Botón Enviar 3D Circular -->
+      <button onclick="enviarMensajeChat()" style="background: linear-gradient(135deg, #00a884 0%, #008069 100%); color: white; border: none; width: 46px; height: 46px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; box-shadow: 0 4px 10px rgba(0,128,105,0.4), inset 0 2px 3px rgba(255,255,255,0.3); flex-shrink: 0; outline: none; border-bottom: 3px solid #004d3f;" onmousedown="this.style.transform='scale(0.92) translateY(2px)'; this.style.borderBottomWidth='1px'; this.style.boxShadow='0 2px 4px rgba(0,128,105,0.3)';" onmouseup="this.style.transform='scale(1) translateY(0)'; this.style.borderBottomWidth='3px'; this.style.boxShadow='0 4px 10px rgba(0,128,105,0.4)';">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor" style="margin-left: 3px; filter: drop-shadow(0 1px 1px rgba(0,0,0,0.15));">
+          <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/>
+        </svg>
+      </button>
+    </div>
+    
+  </div>
+</div>
+
+<!-- ANIMACIONES Y ESTILOS DE DESPLAZAMIENTO -->
+<style>
+  @keyframes whatsapp-pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.25); opacity: 0.5; }
+    100% { transform: scale(1); opacity: 1; }
+  }
+  #historial-chat::-webkit-scrollbar {
+    width: 6px;
+  }
+  #historial-chat::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  #historial-chat::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.12);
+    border-radius: 10px;
+  }
+  #historial-chat::-webkit-scrollbar-thumb:hover {
+    background: rgba(0, 0, 0, 0.22);
+  }
+</style>
+
+<!-- LÓGICA DE PROGRAMACIÓN PRESERVA-DATOS -->
+<script>
+  // Enlace obligatorio de tu Web App de Google Apps Script
+  const URL_NUEVO_CHAT = "https://script.google.com/macros/s/AKfycbxX45PypgI66fJTxpb1YtOM83IskVk1r0Uv8N6MIsJTQu8Unu0n0NtwW4Z-MBh2tW8s/exec";
+
+  document.addEventListener("DOMContentLoaded", function() {
+    actualizarChatContinuo();
+        // Consulta automatizada cada 7 segundos para actualizar de forma óptima
+    setInterval(actualizarChatContinuo, 7000);
+  });
+
+  function actualizarChatContinuo() {
+    fetch(URL_NUEVO_CHAT + "?peticion=leer")
+      .then(res => res.json())
+      .then(function(datos) {
+        document.getElementById('txt-corazones').innerText = datos.totalCorazones || 0;
+        document.getElementById('txt-guinos').innerText = datos.totalGuinos || 0;
+        
+        var caja = document.getElementById('historial-chat');
+        caja.innerHTML = "";
+        
+        if(!datos.listaComentarios || datos.listaComentarios.length === 0) {
+          caja.innerHTML = '<p style="color: #667781; text-align: center; font-size: 0.85rem; margin: auto 0; background: rgba(255,255,255,0.85); padding: 8px 16px; border-radius: 10px; align-self: center; box-shadow: 0 1px 3px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.01);">No hay mensajes aún. ¡Sé el primero en escribir!</p>';
+          return;
+        }
+        
+        datos.listaComentarios.forEach(function(item) {
+          var inputApodo = document.getElementById('apodo-usuario');
+          var apodoActual = inputApodo.value.trim().replace(/[^a-zA-Z0-9_]/g, "");
+          
+          // Lógica avanzada de asignación de lados WhatsApp (Mío = Derecha, Otros = Izquierda)
+          var esPropio = (apodoActual !== "" && item.usuario.toLowerCase() === apodoActual.toLowerCase());
+          
+          var estiloBurbuja = esPropio 
+            ? 'background: #d9fdd3; align-self: flex-end; border-radius: 12px 0px 12px 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.15); margin-left: 40px;' 
+            : 'background: #ffffff; align-self: flex-start; border-radius: 0px 12px 12px 12px; box-shadow: 0 1px 2px rgba(0,0,0,0.15); margin-right: 40px;';
+            
+          var estiloUsuario = esPropio ? 'color: #00a884;' : 'color: #128c7e;';
+
+          caja.innerHTML += `
+            <div style="${estiloBurbuja} padding: 8px 12px; font-size: 0.92rem; word-break: break-word; position: relative; max-width: 82%; display: flex; flex-direction: column; border: 1px solid rgba(0,0,0,0.02); animation: fadeInBubble 0.2s ease-out;">
+              <span style="${estiloUsuario} font-weight: 700; font-size: 0.78rem; display: block; margin-bottom: 2px; letter-spacing: 0.1px;">@${item.usuario}</span>
+              <span style="color: #111b21; font-weight: 400; line-height: 1.45;">${item.mensaje}</span>
+            </div>`;
+        });
+        caja.scrollTop = caja.scrollHeight; // Auto-scroll al último mensaje
+      })
+      .catch(err => console.error("Error leyendo comunidad:", err));
+  }
+
+  function reaccionar(tipoEmoji) {
+    var btn = tipoEmoji === 'Corazon' ? document.getElementById('btn-corazon') : document.getElementById('btn-guino');
+    btn.disabled = true;
+    
+    fetch(`${URL_NUEVO_CHAT}?peticion=guardar&tipo=${tipoEmoji}&contenido=1&apodo=Reaccion`)
+      .then(() => {
+        actualizarChatContinuo();
+        btn.disabled = false;
+      })
+      .catch(() => btn.disabled = false);
+  }
+
+  function enviarMensajeChat() {
+    var inputApodo = document.getElementById('apodo-usuario');
+    var inputMsg = document.getElementById('mensaje-usuario');
+    
+    var apodo = inputApodo.value.trim().replace(/[^a-zA-Z0-9_]/g, "");
+    var texto = inputMsg.value.trim();
+    
+    if(texto === "") return;
+    if(apodo === "") apodo = "Lector_Anonimo";
+
+    inputMsg.value = ""; // Limpieza instantánea para mejorar la experiencia de usuario
+    
+    fetch(`${URL_NUEVO_CHAT}?peticion=guardar&tipo=Comentario&contenido=${encodeURIComponent(texto)}&apodo=${encodeURIComponent(apodo)}`)
+      .then(() => actualizarChatContinuo());
+  }
+</script>
