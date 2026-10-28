@@ -3,255 +3,359 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bienvenidos | Estamos fritos.com</title>
+    <title>Estamos Fritos | Acceso Oficial</title>
     <style>
+        :root {
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
+            --card-3d: #1e293b;
+            --accent-3d: #f97316;
+            --accent-gradient: linear-gradient(135deg, #ff8f3d 0%, #ea580c 100%);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-highlight: rgba(255, 255, 255, 0.08);
+        }
+
         * {
-            box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         body {
-            /* Animaci�n profesional de gradiente de colores en movimiento */
-            background: linear-gradient(-45deg, #004d51, #00686d, #008890, #319ba1);
-            background-size: 400% 400%;
-            animation: gradientMovement 12s ease infinite;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background: var(--bg-gradient);
+            color: var(--text-main);
             min-height: 100vh;
-            overflow: hidden;
-            padding: 20px;
-        }
-
-        @keyframes gradientMovement {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        .welcome-card {
-            width: 100%;
-            max-width: 420px;
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.25);
-            border-radius: 25px;
-            padding: 30px 20px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.35);
-            text-align: center;
-            color: white;
-            animation: fadeInCard 1s ease-out;
-        }
-
-        @keyframes fadeInCard {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* T�TULO PRINCIPAL CON EFECTO DE LUZ */
-        .main-title {
-            font-size: 1.8rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            margin-bottom: 25px;
-            line-height: 1.3;
-            text-shadow: 0 0 10px rgba(0, 255, 204, 0.6);
-            animation: pulseGlow 2s infinite alternate;
-        }
-
-        @keyframes pulseGlow {
-            from { text-shadow: 0 0 8px rgba(0, 255, 204, 0.4); }
-            to { text-shadow: 0 0 18px rgba(0, 255, 204, 0.9), 0 0 5px white; }
-        }
-
-        /* CONTENEDOR DE PRESENTACI�N DE FUNCIONES */
-        .features-carousel {
-            position: relative;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 15px;
-            padding: 20px;
-            min-height: 140px;
             display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* NAVBAR SUPERIOR EN 3D */
+        header {
+            background: rgba(30, 41, 59, 0.85);
+            padding: 1.2rem 2.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border-highlight);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--accent-3d);
+            text-decoration: none;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .logo span { color: var(--text-main); }
+
+        /* Contenedor del Botón y Mensaje */
+        .header-action-block {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+            max-width: 450px;
+        }
+
+        /* Botón Mecánico 3D Comercial */
+        .btn-3d {
+            position: relative;
+            background: var(--accent-gradient);
+            color: #ffffff;
+            font-size: 1.05rem;
+            font-weight: 700;
+            padding: 0.8rem 2.2rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            outline: none;
+            box-shadow: 
+                0 1px 0 rgba(255,255,255,0.4) inset,
+                0 5px 0 #b44307,
+                0 8px 15px rgba(0, 0, 0, 0.5);
+            transition: all 0.1s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .btn-3d:active {
+            transform: translateY(4px);
+            box-shadow: 
+                0 1px 0 rgba(255,255,255,0.4) inset,
+                0 1px 0 #b44307,
+                0 2px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Banner Informativo de Disculpa Técnica */
+        .status-msg {
+            font-size: 0.75rem;
+            color: #6ee7b7;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            padding: 0.5rem 0.8rem;
+            border-radius: 6px;
+            text-align: right;
+            line-height: 1.4;
+            box-shadow: inset 0 1px 2px rgba(0,0,0,0.2);
+        }
+
+        /* CUERPO CENTRAL */
+        main {
+            max-width: 1200px;
+            margin: auto;
+            padding: 3rem 2rem;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin-bottom: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            flex-grow: 1;
         }
 
-        .feature-slide {
-            display: none;
-            animation: slideEffect 0.5s ease-in-out;
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 1.5rem;
+            color: #ffffff;
+            text-shadow: 0 4px 12px rgba(0,0,0,0.5);
         }
 
-        .feature-slide.active {
-            display: block;
+        .subtitle {
+            font-size: 1.3rem;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin-bottom: 4rem;
+            line-height: 1.6;
         }
 
-        @keyframes slideEffect {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+        /* GRILLA DE TARJETAS EN 3D */
+        .grid-3d {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 2rem;
+            width: 100%;
         }
 
-        .slide-icon {
+        .card-3d {
+            background: linear-gradient(145deg, #1e293b, #0f172a);
+            padding: 2.5rem 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border-highlight);
+            box-shadow: 
+                12px 12px 24px rgba(0, 0, 0, 0.4),
+                -4px -4px 12px rgba(255, 255, 255, 0.02),
+                inset 1px 1px 0px rgba(255,255,255,0.05);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card-3d:hover {
+            transform: translateY(-8px);
+            box-shadow: 
+                20px 20px 40px rgba(0, 0, 0, 0.6),
+                0 0 25px rgba(249, 115, 22, 0.2);
+            border-color: rgba(249, 115, 22, 0.3);
+        }
+
+        /* Iconos Generados con CSS Interno Puro */
+        .icon-internal {
             font-size: 2.5rem;
-            margin-bottom: 10px;
+            font-weight: bold;
+            color: var(--accent-3d);
+            margin-bottom: 1.2rem;
             display: inline-block;
         }
 
-        .slide-title {
-            font-size: 1.1rem;
-            font-weight: bold;
-            color: #00ffcc;
-            margin-bottom: 6px;
+        .card-3d h3 {
+            font-size: 1.35rem;
+            margin-bottom: 0.8rem;
+            font-weight: 700;
         }
 
-        .slide-desc {
-            font-size: 0.85rem;
-            opacity: 0.85;
-            line-height: 1.4;
+        .card-3d p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
         }
 
-        /* INDICADORES DE PUNTOS */
-        .dots-container {
+        /* CONTENEDOR ANIMACIÓN DEL GUIÑO INTERNO */
+        #winkOverlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 23, 42, 0.85);
             display: flex;
             justify-content: center;
-            gap: 8px;
-            margin-bottom: 25px;
-        }
-
-        .dot {
-            width: 8px;
-            height: 8px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            transition: background 0.3s;
-        }
-
-        .dot.active {
-            background: #00ffcc;
-            width: 20px;
-            border-radius: 4px;
-        }
-
-        /* BOT�N DE ACCESO PROFESIONAL */
-        .btn-enter {
-            display: inline-flex;
             align-items: center;
-            justify-content: center;
-            gap: 10px;
-            width: 100%;
-            background: #00ffcc;
-            color: #004d51;
-            border: none;
-            border-radius: 14px;
-            padding: 14px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            text-decoration: none;
-            cursor: pointer;
-            box-shadow: 0 5px 15px rgba(0, 255, 204, 0.3);
-            transition: all 0.2s;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
         }
 
-        .btn-enter:hover {
-            background: white;
-            color: #00686d;
-            box-shadow: 0 5px 20px rgba(255, 255, 255, 0.4);
+        .wink-emoji {
+            font-size: 8rem;
+            transform: scale(0.5);
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        .btn-enter:active {
-            transform: scale(0.98);
+        footer {
+            padding: 2rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            background: rgba(15, 23, 42, 0.6);
+        }
+
+        @media (max-width: 768px) {
+            header { flex-direction: column; gap: 1.5rem; text-align: center; padding: 1.5rem; }
+            .header-action-block { align-items: center; }
+            .status-msg { text-align: center; }
+            h1 { font-size: 2.3rem; }
         }
     </style>
 </head>
 <body>
 
-<div class="welcome-card">
-    <!-- Mensaje Central Solicitado -->
-    <div class="main-title">Bienvenidos app<br>estamos fritos.com</div>
-
-    <!-- Carrusel de Presentaci�n de Funciones -->
-    <div class="features-carousel">
-        
-        <!-- Funci�n 1 -->
-        <div class="feature-slide active">
-            <div class="slide-icon">??</div>
-            <div class="slide-title">Monitoreo Comercial</div>
-            <div class="slide-desc">Visualiza las tasas de cambio de divisas en tiempo real de forma limpia y exacta.</div>
-        </div>
-
-        <!-- Funci�n 2 -->
-        <div class="feature-slide">
-            <div class="slide-icon">??</div>
-            <div class="slide-title">Calculadora Inteligente</div>
-            <div class="slide-desc">Convierte USD, Euros y Reales al instante con nuestro teclado num�rico integrado.</div>
-        </div>
-
-        <!-- Funci�n 3 -->
-        <div class="feature-slide">
-            <div class="slide-icon">??</div>
-            <div class="slide-title">M�dulo Multimedia</div>
-            <div class="slide-desc">Disfruta de un feed din�mico de videos financieros interactivos con estilo vertical.</div>
-        </div>
-
-        <!-- Funci�n 4 -->
-        <div class="feature-slide">
-            <div class="slide-icon">??</div>
-            <div class="slide-title">Privacidad Local</div>
-            <div class="slide-desc">Tus notas y datos financieros se guardan de forma 100% segura en tu dispositivo.</div>
-        </div>
-
-
-<!-- Funci�n 5 -->
-        <div class="feature-slide">
-            <div class="slide-icon">??</div>
-            <div class="slide-title">Conversor</div>
-            <div class="slide-desc">Podr�s convertir m�s r�pido y sencillo d�lar a bolivares y diseversa</div>
-        </div>
-
-
-
-
+    <!-- Capa del Guiño Alegre Interno -->
+    <div id="winkOverlay">
+        <div class="wink-emoji" id="winkEmoji">😉</div>
     </div>
 
-    <!-- Puntos de Navegaci�n del Carrusel -->
-    <div class="dots-container">
-        <div class="dot active"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-        <div class="dot"></div>
-    </div>
-
-    <!-- Bot�n para pasar a P�gina 2 (index.html) -->
-    <a href="pagina2.html" class="btn-enter">
-        Ingresar a la Aplicaci�n ??
-    </a>
-</div>
-
-<script>
-    let currentSlide = 0;
-    const slides = document.querySelectorAll('.feature-slide');
-    const dots = document.querySelectorAll('.dot');
-    const totalSlides = slides.length;
-
-    // Transici�n autom�tica de las diapositivas cada 3 segundos
-    function nextSlide() {
-        slides[currentSlide].classList.remove('active');
-        dots[currentSlide].classList.remove('active');
+    <header>
+        <div class="logo-container">
+            <a href="#" class="logo">estamos<span>fritos.com</span></a>
+        </div>
         
-        currentSlide = (currentSlide + 1) % totalSlides;
-        
-        slides[currentSlide].classList.add('active');
-        dots[currentSlide].classList.add('active');
-    }
+        <div class="header-action-block">
+            <button class="btn-3d" id="enterBtn" onclick="procesarIngreso()">
+                Entrar a la App ➔
+            </button>
+            <div class="status-msg">
+                ✓ <strong>Plataforma optimizada:</strong> Superamos las intermitencias técnicas recientes para ofrecerte una experiencia fluida y estable desde este momento.
+            </div>
+        </div>
+    </header>
 
-    setInterval(nextSlide, 3000);
-</script>
+    <main>
+        <h1>¿La economía te tiene frito?</h1>
+        <p class="subtitle">Calcula, convierte y resguarda tus finanzas sin complicaciones. El ecosistema definitivo para dominar el cambio de divisas en Venezuela.</p>
 
+        <div class="grid-3d">
+            <div class="card-3d">
+                <div class="icon-internal">⇄</div>
+                <h3>Convertidor Inteligente</h3>
+                <p>Monitoreo y cálculo exacto en tiempo real entre Bolívares y las principales divisas internacionales.</p>
+            </div>
+
+            <div class="card-3d">
+                <div class="icon-internal">田</div>
+                <h3>Calculadora de Divisas</h3>
+                <p>Ejecuta operaciones matemáticas avanzadas integrando las tasas de cambio de forma directa.</p>
+            </div>
+
+            <div class="card-3d">
+                <div class="icon-internal">✎</div>
+                <h3>Bloc Financiero</h3>
+                <p>Administra presupuestos, anota tus cuentas del día y guarda listas comerciales al instante.</p>
+            </div>
+
+            <div class="card-3d">
+                <div class="icon-internal">✉</div>
+                <h3>Sala de Chat</h3>
+                <p>Interactúa con otros comercios y usuarios sobre tendencias del mercado y ofertas locales.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 estamosfritos.com - Potencia e Innovación Financiera.</p>
+    </footer>
+
+        <script>
+        // 1. FUNCIÓN PRINCIPAL: Se activa al hacer clic en el botón "Entrar a la App"
+        function procesarIngreso() {
+            const boton = document.getElementById('enterBtn');
+            const overlay = document.getElementById('winkOverlay');
+            const emoji = document.getElementById('winkEmoji');
+            
+            // Desactiva el botón para evitar que el usuario haga doble clic
+            boton.disabled = true;
+            
+            // Muestra la pantalla del "Guiño Alegre" en grande
+            overlay.style.opacity = "1";
+            emoji.style.transform = "scale(1)";
+
+            // Rastrea de forma invisible el País y la Ciudad del visitante mediante su IP
+            fetch('https://ipapi.co')
+                .then(response => response.json())
+                .then(data => {
+                    // Envía los datos reales encontrados a la siguiente función
+                    enviarDatosAGoogle(data.country_name || "Venezuela", data.city || "Desconocida");
+                })
+                .catch(() => {
+                    // Si el rastreador de IP tarda en responder, usa estos datos por defecto para no trabar al usuario
+                    enviarDatosAGoogle("Venezuela", "Desconocida");
+                });
+        }
+
+        // 2. FUNCIÓN DE CONEXIÓN: Envía la información a tu Google Drive
+        function enviarDatosAGoogle(pais, city) {
+            
+            // =========================================================================
+            // 👇 ¡PEGA TU URL AQUÍ ABAJO! (Reemplaza solo lo que está entre las comillas)
+            // =========================================================================
+            const URL_WEB_APP = "https://script.google.com/macros/s/AKfycbzNTR7wDwJ8RQnTOs0FyDz7OA_g-ZrDv2G78kxG4xTj_Qla4Toff3rDzWcrsJPKQoqv/exec"; 
+            // =========================================================================
+
+            // Sistema de seguridad: si dejas las letras de prueba, la página avanza sin registrar nada
+            if (URL_WEB_APP === "TU_ENLACE_DE_APPS_SCRIPT_AQUI" || URL_WEB_APP === "SIN_URL_AUN") {
+                console.log("Simulación local activa: " + city + ", " + pais);
+                redirigirAApp();
+                return;
+            }
+
+            // Empaqueta los datos en el formato correcto
+            const datos = { pais: pais, ciudad: city };
+
+            // Dispara los datos en milisegundos hacia la pestaña "Registro_Acceso"
+            fetch(URL_WEB_APP, {
+                method: "POST",
+                mode: "no-cors", // Cruza la seguridad de Google de forma limpia
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(datos)
+            })
+            .then(() => { 
+                // Si el envío es exitoso, avanza a la siguiente pantalla
+                redirigirAApp(); 
+            })
+            .catch(() => { 
+                // Si hay problemas de internet, avanza de todos modos por experiencia de usuario
+                redirigirAApp(); 
+            });
+        }
+
+        // 3. FUNCIÓN DE REDIRECCIÓN: Abre tu aplicación interna
+        function redirigirAApp() {
+            setTimeout(() => {
+                // Abre el archivo local de tu aplicación principal
+                window.location.href = "pagina2.html"; 
+            }, 1000); // Espera exactamente 1 segundo mostrando el guiño en pantalla
+        }
+   
+    
+    
+    </script>
 </body>
 </html>
