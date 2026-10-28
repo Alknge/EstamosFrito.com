@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Calculadora MÛvil - Estamos Fritos</title>
+    <title>Calculadora M√≥vil - Estamos Fritos</title>
     <style>
         * {
             box-sizing: border-box;
@@ -13,9 +13,9 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Ajuste exacto para la pantalla del mÛvil */
+        /* Ajuste exacto para la pantalla del m√≥vil */
         body {
-            background-color: #047575; /* Fondo del mismo color del men˙ */
+            background-color: #047575; /* Fondo del mismo color del men√∫ */
             display: flex;
             justify-content: center;
             align-items: center;
@@ -25,7 +25,7 @@
             padding: 15px;
         }
 
-        /* Contenedor estirado Ûptimo para dispositivos mÛviles */
+        /* Contenedor estirado √≥ptimo para dispositivos m√≥viles */
         .calculadora-container {
             background-color: #047575; 
             width: 100%;
@@ -60,7 +60,7 @@
             box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.2);
         }
 
-        /* Parte superior: OperaciÛn en curso */
+        /* Parte superior: Operaci√≥n en curso */
         .pantalla-operacion {
             color: rgba(255, 255, 255, 0.7);
             font-size: 1.2rem;
@@ -70,7 +70,7 @@
             height: 28px;
         }
 
-        /* Parte inferior: Resultado autom·tico */
+        /* Parte inferior: Resultado autom√°tico */
         .pantalla-resultado {
             color: #ffffff;
             font-size: 2.2rem;
@@ -82,7 +82,7 @@
             line-height: 45px;
         }
 
-        /* Rejilla de botones flexible para rellenar el espacio mÛvil */
+        /* Rejilla de botones flexible para rellenar el espacio m√≥vil */
         .botones-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -161,21 +161,21 @@
         <div class="botones-grid">
             <!-- Fila 1 -->
             <button class="btn btn-borrar" onclick="limpiarTodo()">C</button>
-            <button class="btn btn-borrar" onclick="borrarUltimo()">?</button>
+            <button class="btn btn-borrar" onclick="borrarUltimo()">‚å´</button>
             <button class="btn btn-operador" onclick="agregarOperador('%')">%</button>
-            <button class="btn btn-operador" onclick="agregarOperador('/')">˜</button>
+            <button class="btn btn-operador" onclick="agregarOperador('/')">√∑</button>
             
             <!-- Fila 2 -->
             <button class="btn" onclick="agregarNumero('7')">7</button>
             <button class="btn" onclick="agregarNumero('8')">8</button>
             <button class="btn" onclick="agregarNumero('9')">9</button>
-            <button class="btn btn-operador" onclick="agregarOperador('*')">◊</button>
+            <button class="btn btn-operador" onclick="agregarOperador('*')">√ó</button>
             
             <!-- Fila 3 -->
             <button class="btn" onclick="agregarNumero('4')">4</button>
             <button class="btn" onclick="agregarNumero('5')">5</button>
             <button class="btn" onclick="agregarNumero('6')">6</button>
-            <button class="btn btn-operador" onclick="agregarOperador('-')">-</button>
+            <button class="btn btn-operador" onclick="agregarOperador('-')">‚àí</button>
             
             <!-- Fila 4 -->
             <button class="btn" onclick="agregarNumero('1')">1</button>
@@ -189,7 +189,7 @@
             <button class="btn btn-igual" onclick="fijarResultado()">=</button>
         </div>
 
-        <a href="pagina2.html" class="btn-volver">?? Volver al Men˙</a>
+        <a href="pagina2.html" class="btn-volver">‚Üê Volver al Men√∫</a>
     </div>
 
     <script>
@@ -234,7 +234,7 @@
             calcularAutomatico();
         }
 
-        // Calcula el resultado en tiempo real sin borrar la lÌnea de arriba
+        // Calcula el resultado en tiempo real sin borrar la l√≠nea de arriba
         function calcularAutomatico() {
             if (operacionActual === '') {
                 pantallaResultado.textContent = '0';
@@ -242,13 +242,13 @@
             }
 
             const ultimoCaracter = operacionActual.slice(-1);
-            // Si termina en un operador b·sico, no calcula hasta recibir el siguiente n˙mero
+            // Si termina en un operador b√°sico, no calcula hasta recibir el siguiente n√∫mero
             if (['+', '-', '*', '/'].includes(ultimoCaracter)) return;
 
             try {
                 let expresion = operacionActual;
 
-                // LÛgica de porcentaje corregida para casos est·ndar y de comercio:
+                // L√≥gica de porcentaje corregida para casos est√°ndar y de comercio:
                 // Ejemplo: "100 * 10 %" -> lo convierte en "100 * (10 / 100)" arrojando 10 de manera limpia
                 if (expresion.includes('%')) {
                     const regexSumaResta = /(\d+(?:\.\d+)?)\s*([\+\-])\s*(\d+(?:\.\d+)?)%/g;
@@ -269,11 +269,11 @@
 
                 pantallaResultado.textContent = resultado;
             } catch (error) {
-                // Falla en silencio mientras el usuario sigue escribiendo la fÛrmula
+                // Falla en silencio mientras el usuario sigue escribiendo la f√≥rmula
             }
         }
 
-              // Al presionar el botÛn "=" pasa el resultado arriba para poder seguir operando sobre Èl
+              // Al presionar el bot√≥n "=" pasa el resultado arriba para poder seguir operando sobre √©l
         function fijarResultado() {
             if (pantallaResultado.textContent !== 'Error' && pantallaResultado.textContent !== '0') {
                 operacionActual = pantallaResultado.textContent;
