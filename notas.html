@@ -13,7 +13,7 @@
         }
 
         body {
-            /* Fondo comercial de administración financiera */
+            /* Fondo comercial de administraciÃ³n financiera */
             background: linear-gradient(rgba(0, 104, 109, 0.9), rgba(0, 121, 128, 0.9)), 
                         url('https://unsplash.com') no-repeat center center fixed;
             background-size: cover;
@@ -99,7 +99,7 @@
             padding-right: 5px;
         }
 
-        /* Barra de desplazamiento estética */
+        /* Barra de desplazamiento estÃ©tica */
         .notes-list::-webkit-scrollbar {
             width: 5px;
         }
@@ -158,7 +158,7 @@
             background: rgba(255, 85, 85, 0.4);
         }
 
-        /* Botón de Retorno */
+        /* BotÃ³n de Retorno */
         .btn-menu {
             display: inline-flex;
             align-items: center;
@@ -185,23 +185,23 @@
 
 <div class="notes-container">
     <div class="header-title">Notas Financieras</div>
-    <div class="subtitle">Gestión Personal de Gastos y Balances</div>
+    <div class="subtitle">GestiÃ³n Personal de Gastos y Balances</div>
 
     <!-- Formulario para agregar registros -->
     <div class="note-form">
-        <input type="text" id="note-concept" class="input-field" placeholder="Concepto (ej. Venta de dólares, Pago local...)">
-        <input type="text" id="note-value" class="input-field" placeholder="Monto u Observación (ej. $50 o 1,800 Bs)">
-        <button class="btn-add" onclick="addNote()">?? Guardar Nota</button>
+        <input type="text" id="note-concept" class="input-field" placeholder="Concepto (ej. Venta de dÃ³lares, Pago local...)">
+        <input type="text" id="note-value" class="input-field" placeholder="Monto u ObservaciÃ³n (ej. $50 o 1,800 Bs)">
+        <button class="btn-add" onclick="addNote()">ğŸ’¾ Guardar Nota</button>
     </div>
 
-    <!-- Listado Dinámico -->
+    <!-- Listado DinÃ¡mico -->
     <div class="notes-list" id="notes-wrapper">
-        <!-- Las notas se cargan aquí automáticamente -->
+        <!-- Las notas se cargan aquÃ­ automÃ¡ticamente -->
     </div>
 
-    <!-- Botón Volver -->
+    <!-- BotÃ³n Volver -->
     <a href="pagina2.html" class="btn-menu">
-        ?? Volver al Menú Principal
+        â¬…ï¸ Volver al MenÃº Principal
     </a>
 </div>
 
@@ -228,7 +228,7 @@
             value: value
         };
 
-        // Obtener lista existente o crear una nueva vacía
+        // Obtener lista existente o crear una nueva vacÃ­a
         let notes = localStorage.getItem("financial_notes") ? JSON.parse(localStorage.getItem("financial_notes")) : [];
         notes.unshift(note); // Agregar al inicio de la lista
 
