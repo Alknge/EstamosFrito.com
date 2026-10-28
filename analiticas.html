@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Estad�sticas y Anal�ticas | Comercial</title>
+    <title>Panel de Analíticas | Estamos Fritos</title>
     <style>
         * {
             box-sizing: border-box;
@@ -75,7 +75,7 @@
             opacity: 0.9;
         }
 
-        /* GR�FICO NATIVO ULTRA R�PIDO (SIN DEPENDENCIAS) */
+        /* GRÁFICO NATIVO ULTRA RÁPIDO (SIN DEPENDENCIAS) */
         .chart-box {
             background: rgba(255, 255, 255, 0.95);
             border-radius: 15px;
@@ -127,14 +127,14 @@
             font-weight: bold;
         }
 
-        .bar-label {
+        .bar-column-label {
             color: #444;
             font-size: 0.75rem;
             font-weight: bold;
             margin-top: 8px;
         }
 
-        /* Bot�n Volver */
+        /* Botón Volver */
         .btn-back {
             display: inline-flex;
             align-items: center;
@@ -161,12 +161,13 @@
 <body>
 
 <div class="analytics-container">
-    <div class="header-title">Panel de Anal�ticas</div>
-    <div class="subtitle">M�tricas de Rendimiento y Uso de la App</div>
+    <div class="header-title">Panel de Analíticas</div>
+    <div class="subtitle">Métricas de Rendimiento y Uso de la App</div>
 
     <div class="metrics-grid">
         <div class="metric-card">
-            <div class="value" id="visit-count">0</div>
+            <!-- Cargando por defecto mientras lee Google Sheets -->
+            <div class="value" id="visit-count">...</div>
             <div class="label">Visitas Totales</div>
         </div>
         <div class="metric-card">
@@ -175,59 +176,101 @@
         </div>
     </div>
 
-    <!-- Gr�fico Comercial Redise�ado e Instant�neo -->
+    <!-- Gráfico Comercial Rediseñado e Instantáneo -->
     <div class="chart-box">
         <div class="chart-title">Volumen de Visitas Semanales</div>
         <div class="bar-chart">
             <div class="chart-column">
                 <div class="bar" style="height: 45%;"><span class="bar-value">45</span></div>
-                <div class="bar-label">Lun</div>
+                <div class="bar-column-label">Lun</div>
             </div>
             <div class="chart-column">
                 <div class="bar" style="height: 60%;"><span class="bar-value">60</span></div>
-                <div class="bar-label">Mar</div>
+                <div class="bar-column-label">Mar</div>
             </div>
             <div class="chart-column">
                 <div class="bar" style="height: 30%;"><span class="bar-value">30</span></div>
-                <div class="bar-label">Mi�</div>
+                <div class="bar-column-label">Mié</div>
             </div>
             <div class="chart-column">
                 <div class="bar" style="height: 75%;"><span class="bar-value">75</span></div>
-                <div class="bar-label">Jue</div>
+                <div class="bar-column-label">Jue</div>
             </div>
             <div class="chart-column">
                 <div class="bar" style="height: 90%;"><span class="bar-value">90</span></div>
-                <div class="bar-label">Vie</div>
+                <div class="bar-column-label">Vie</div>
             </div>
             <div class="chart-column">
-                <div class="bar" id="live-bar" style="height: 10%;"><span class="bar-value" id="live-val">0</span></div>
-                <div class="bar-label">S�b</div>
+                <!-- Barra dinámica conectada a tus métricas globales de hoy -->
+                <div class="bar" id="live-bar" style="height: 0%;"><span class="bar-value" id="live-val">0</span></div>
+                <div class="bar-column-label">Sáb</div>
             </div>
             <div class="chart-column">
-                <div class="bar" style="height: 5%;"><span class="bar-value">0</span></div>
-                <div class="bar-label">Dom</div>
+                <div class="bar" style="height: 5%;"><span class="bar-value">5</span></div>
+                <div class="bar-column-label">Dom</div>
             </div>
         </div>
     </div>
 
     <a href="pagina2.html" class="btn-back">
-        ?? Volver al Men� Principal
+        ⬅️ Volver al Menú Principal
     </a>
 </div>
 
 <script>
-    // Contador de visitas locales
-    let visits = localStorage.getItem('app_visits') ? parseInt(localStorage.getItem('app_visits')) : 0;
-    visits++;
-    localStorage.setItem('app_visits', visits);
-    document.getElementById('visit-count').innerText = visits;
+    // =========================================================================
+    // INTEGRACIÓN DE INGENIERÍA: CONEXIÓN REAL CON GOOGLE DRIVE
+    // =========================================================================
+    
+    // AQUÍ COLOCAS TU URL GENERADA POR EL APPS SCRIPT DE REGISTRO
+    const URL_MI_APPS_SCRIPT = "https://script.google.com/macros/s/AKfycbzNTR7wDwJ8RQnTOs0FyDz7OA_g-ZrDv2G78kxG4xTj_Qla4Toff3rDzWcrsJPKQoqv/exec";
 
-    // Actualizar la columna del gr�fico en tiempo real con tus visitas reales
-    let liveBarHeight = Math.min(visits * 8, 100); 
-    document.getElementById('live-bar').style.height = liveBarHeight + '%';
-    document.getElementById('live-val').innerText = visits;
+    function cargarVisitasGlobales() {
+        if (URL_MI_APPS_SCRIPT === "SIN_URL_AUN") {
+            // Simulación en caso de que no esté colocada la URL de producción
+            actualizarInterfazGrafica(125); 
+            return;
+        }
 
-    // Cron�metro de retenci�n
+        // Consultamos la hoja mediante la URL de Apps Script (Petición silenciosa)
+        // Agregamos un parámetro para decirle al script que solo queremos LEER la cantidad de filas
+        fetch(URL_MI_APPS_SCRIPT + "?action=read_count")
+            .then(response => response.json())
+            .then(res => {
+                if (res && res.total_visitas) {
+                    actualizarInterfazGrafica(res.total_visitas);
+                } else {
+                    actualizarInterfazGrafica(0);
+                }
+            })
+            .catch(() => {
+                // Respaldo local por si falla la red
+                let backupVisits = localStorage.getItem('app_visits') ? parseInt(localStorage.getItem('app_visits')) : 1;
+                actualizarInterfazGrafica(backupVisits);
+            });
+    }
+
+    function actualizarInterfazGrafica(totalGlobal) {
+        // Colocar el número en la tarjeta turquesa
+        document.getElementById('visit-count').innerText = totalGlobal;
+
+        // Ajustar la altura de tu barra del día sábado de forma proporcional
+        // Supongamos que el tope estético de la barra son 200 visitas (puedes ajustar el 200)
+        let alturaCalculada = Math.min((totalGlobal / 200) * 100, 100);
+        if (alturaCalculada < 10 && totalGlobal > 0) alturaCalculada = 12; // Altura mínima para que sea visible
+
+        document.getElementById('live-bar').style.height = alturaCalculada + '%';
+        document.getElementById('live-val').innerText = totalGlobal;
+    }
+
+    // Ejecutar la lectura global de datos al abrir la pantalla de analítica
+    window.onload = function() {
+        cargarVisitasGlobales();
+    };
+
+    // =========================================================================
+    // LÓGICA ORIGINAL: CRONÓMETRO DE RETENCIÓN LOCAL
+    // =========================================================================
     let totalSeconds = localStorage.getItem('app_total_time') ? parseInt(localStorage.getItem('app_total_time')) : 0;
     
     function updateTimer() {
@@ -242,6 +285,5 @@
     }
     setInterval(updateTimer, 1000);
 </script>
-
 </body>
 </html>
