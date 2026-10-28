@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Conversor Euro a BolÌvares</title>
+    <title>Conversor Euro a Bol√≠vares</title>
     <style>
         * {
             box-sizing: border-box;
@@ -70,7 +70,7 @@
             border-color: #00ffcc;
         }
 
-        /* Pantalla de visualizaciÛn */
+        /* Pantalla de visualizaci√≥n */
         .screen-container {
             background: rgba(0, 0, 0, 0.3);
             border-radius: 12px;
@@ -126,7 +126,7 @@
             text-align: center;
         }
 
-        /* BotÛn Compartir WhatsApp */
+        /* Bot√≥n Compartir WhatsApp */
         .btn-whatsapp {
             display: inline-flex;
             align-items: center;
@@ -151,7 +151,7 @@
             background-color: #20ba5a;
         }
 
-        /* Teclado numÈrico integrado */
+        /* Teclado num√©rico integrado */
         .keyboard {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -175,7 +175,7 @@
             background: rgba(255, 255, 255, 0.4);
         }
 
-        /* BotÛn de Retorno */
+        /* Bot√≥n de Retorno */
         .btn-menu {
             display: inline-flex;
             align-items: center;
@@ -206,37 +206,37 @@
     <!-- Modos de sentido de Cambio -->
     <div class="direction-selector">
         <button class="dir-btn active" id="btn-eur-to-bs" onclick="setDirection('EUR_TO_BS')">
-            ?? Cambiar Euros a Bs
+            üí∂ Cambiar Euros a Bs
         </button>
         <button class="dir-btn" id="btn-bs-to-eur" onclick="setDirection('BS_TO_EUR')">
-            ???? Cambiar Bs a Euros
+            üáªüá™ Cambiar Bs a Euros
         </button>
     </div>
 
     <!-- Pantalla del Conversor -->
     <div class="screen-container">
         <div class="display-row">
-            <span class="currency-label" id="label-input">?? EUR:</span>
+            <span class="currency-label" id="label-input">üí∂ EUR:</span>
             <input type="text" id="amount-input" class="num-input" value="0" readonly>
         </div>
         <div class="display-row">
-            <span class="currency-label" id="label-output">???? Bs:</span>
+            <span class="currency-label" id="label-output">üáªüá™ Bs:</span>
             <div id="amount-output" class="result-text">0.00</div>
         </div>
     </div>
 
         <div class="rate-footer">
-        <!-- El ID se moviÛ aquÌ para actualizar todo el texto incluyendo los Bs de forma limpia -->
-        Tasa de conversiÛn de referencia: <b id="tasa-referencia-eur">1 EUR = 0.00 Bs</b>
+        <!-- El ID se movi√≥ aqu√≠ para actualizar todo el texto incluyendo los Bs de forma limpia -->
+        Tasa de conversi√≥n de referencia: <b id="tasa-referencia-eur">1 EUR = 000.00 Bs</b>
     </div>
     
 
-    <!-- BotÛn Comercial de EnvÌo WhatsApp -->
+    <!-- Bot√≥n Comercial de Env√≠o WhatsApp -->
     <a href="#" id="whatsapp-share-btn" target="_blank" class="btn-whatsapp" onclick="shareOnWhatsApp(event)">
-        ??  WhatsApp no activo
+        üü¢  WhatsApp no activo
     </a>
 
-    <!-- Teclado NumÈrico Directo -->
+    <!-- Teclado Num√©rico Directo -->
     <div class="keyboard">
         <div class="key" onclick="pressNum('1')">1</div>
         <div class="key" onclick="pressNum('2')">2</div>
@@ -252,18 +252,18 @@
         <div class="key" onclick="pressNum('.')">.</div>
     </div>
 
-    <!-- BotÛn Volver -->
+    <!-- Bot√≥n Volver -->
     <a href="pagina2.html" class="btn-menu">
-        ?? Volver al Men˙ Principal
+        ‚¨ÖÔ∏è Volver al Men√∫ Principal
     </a>
 </div>
 
 <script>
-     // 1. COLOCA AQUÕ TU URL DE EXEC DE APPS SCRIPT
+     // 1. COLOCA AQU√ç TU URL DE EXEC DE APPS SCRIPT
     const APPS_SCRIPT_URL_EUR = "https://script.google.com/macros/s/AKfycbzw87Jb3Dlhj9ykvHyw51mNNoN1W8wAjITNmKk4QWtGtExwiIakuCy61NY9lyYio_wv/exec";
     
-    // Valor base que se actualizar· autom·ticamente desde Google Sheets
-    let TASA_EURO = 0.00; 
+    // Valor base que se actualizar√° autom√°ticamente desde Google Sheets
+    let TASA_EURO = 871.89; 
     let currentDirection = 'EUR_TO_BS';
 
     // 2. Conectar directo por URL con Apps Script para obtener la tasa del Euro en tiempo real
@@ -273,8 +273,8 @@
         .then(data => {
             const config = data.config;
             
-            // Sincronizar la variable matem·tica con el Euro de tu Google Sheets
-            TASA_EURO = parseFloat(config.euro_hoy) || 0.00;
+            // Sincronizar la variable matem√°tica con el Euro de tu Google Sheets
+            TASA_EURO = parseFloat(config.euro_hoy) || 871.89;
             
             // Actualizar la etiqueta del precio de referencia en tu HTML
             const lblTasaRef = document.getElementById('tasa-referencia-eur');
@@ -285,10 +285,10 @@
             // Opcional: Actualizar la fecha si tienes esta etiqueta en pantalla
             const lblFecha = document.getElementById('fecha-actualizacion-eur');
             if (lblFecha) {
-                lblFecha.innerText = "⁄ltima actualizaciÛn: " + config.fecha_actualizacion;
+                lblFecha.innerText = "√öltima actualizaci√≥n: " + config.fecha_actualizacion;
             }
             
-            // Si ya hay un n˙mero puesto, recalcular de inmediato
+            // Si ya hay un n√∫mero puesto, recalcular de inmediato
             const inputElement = document.getElementById('amount-input');
             if (inputElement && inputElement.value !== '0') {
                 autoConvert(parseFloat(inputElement.value));
@@ -308,18 +308,18 @@
         
         if(direction === 'EUR_TO_BS') {
             document.getElementById('btn-eur-to-bs').classList.add('active');
-            document.getElementById('label-input').innerText = "?? EUR:";
-            document.getElementById('label-output').innerText = "???? Bs:";
+            document.getElementById('label-input').innerText = "üí∂ EUR:";
+            document.getElementById('label-output').innerText = "üáªüá™ Bs:";
         } else {
             document.getElementById('btn-bs-to-eur').classList.add('active');
-            document.getElementById('label-input').innerText = "???? Bs:";
-            document.getElementById('label-output').innerText = "?? EUR:";
+            document.getElementById('label-input').innerText = "üáªüá™ Bs:";
+            document.getElementById('label-output').innerText = "üí∂ EUR:";
         }
         
         pressClear();
     }
 
-    // FunciÛn vinculada a tu teclado numÈrico en pantalla
+    // Funci√≥n vinculada a tu teclado num√©rico en pantalla
     function pressNum(num) {
         const inputElement = document.getElementById('amount-input');
         let currentVal = inputElement.value;
@@ -342,7 +342,7 @@
         document.getElementById('amount-output').innerText = '0.00';
     }
 
-    // Conversor matem·tico autom·tico e inmediato con la tasa de la base de datos
+    // Conversor matem√°tico autom√°tico e inmediato con la tasa de la base de datos
     function autoConvert(val) {
         const outputElement = document.getElementById('amount-output');
         if (!outputElement) return;
@@ -354,9 +354,9 @@
 
         let result = 0;
         if (currentDirection === 'EUR_TO_BS') {
-            result = val * TASA_EURO; // Multiplica de Euro a BolÌvar
+            result = val * TASA_EURO; // Multiplica de Euro a Bol√≠var
         } else {
-            result = val / TASA_EURO; // Divide de BolÌvar a Euro
+            result = val / TASA_EURO; // Divide de Bol√≠var a Euro
         }
 
         outputElement.innerText = result.toFixed(2);
@@ -369,18 +369,18 @@
 
         if (parseFloat(inputVal) <= 0 || outputVal === "0.00") {
             event.preventDefault();
-            alert("Por favor, ingrese un monto v·lido primero antes de enviar.");
+            alert("Por favor, ingrese un monto v√°lido primero antes de enviar.");
             return;
         }
 
         let message = "";
         if (currentDirection === 'EUR_TO_BS') {
-            message = `*Estamos fritos.com* ????%0A%0A*ConversiÛn Realizada:*%0A?? Monto: *${inputVal} EUR*%0A?? Equivalente: *${outputVal} Bs*%0A?? Tasa Ref: ${TASA_EURO.toFixed(2)} Bs por Euro.%0A%0A_°Gracias por usar nuestro servicio!_`;
+            message = `*Estamos fritos.com* üí∂üìä%0A%0A*Conversi√≥n Realizada:*%0Aüëâ Monto: *${inputVal} EUR*%0Aüíµ Equivalente: *${outputVal} Bs*%0Aüìå Tasa Ref: ${TASA_EURO.toFixed(2)} Bs por Euro.%0A%0A_¬°Gracias por usar nuestro servicio!_`;
         } else {
-            message = `*Estamos fritos.com* ????%0A%0A*ConversiÛn Realizada:*%0A?? Monto: *${inputVal} Bs*%0A?? Equivalente: *${outputVal} EUR*%0A?? Tasa Ref: ${TASA_EURO.toFixed(2)} Bs por Euro.%0A%0A_°Gracias por usar nuestro servicio!_`;
+            message = `*Estamos fritos.com* üí∂üìä%0A%0A*Conversi√≥n Realizada:*%0Aüëâ Monto: *${inputVal} Bs*%0Aüí∂ Equivalente: *${outputVal} EUR*%0Aüìå Tasa Ref: ${TASA_EURO.toFixed(2)} Bs por Euro.%0A%0A_¬°Gracias por usar nuestro servicio!_`;
         }
 
-        // Enlace optimizado para funcionar en cualquier dispositivo mÛvil o PC sin bloqueos
+        // Enlace optimizado para funcionar en cualquier dispositivo m√≥vil o PC sin bloqueos
         document.getElementById('whatsapp-share-btn').href = `https://wa.me{message}`;
     }
     

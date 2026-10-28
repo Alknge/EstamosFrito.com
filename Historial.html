@@ -120,7 +120,7 @@
             color: var(--accent-color);
         }
 
-        /* Mensaje de carga y lista vacía */
+        /* Mensaje de carga y lista vacÃ­a */
         .status-msg {
             text-align: center;
             padding: 30px;
@@ -147,18 +147,18 @@
     <div class="container">
         <div class="header-historial">
             <h2>HISTORIAL DE TASAS</h2>
-            <!-- Cambia 'page.html' por el nombre de tu archivo de menú si es diferente -->
-            <button class="btn-volver" onclick="window.location.href='pagina2.html'">? Volver</button>
+            <!-- Cambia 'page.html' por el nombre de tu archivo de menÃº si es diferente -->
+            <button class="btn-volver" onclick="window.location.href='pagina2.html'">â¬… Volver</button>
         </div>
 
-        <!-- Contenedor dinámico donde se cargarán las filas de la base de datos -->
+        <!-- Contenedor dinÃ¡mico donde se cargarÃ¡n las filas de la base de datos -->
         <div id="lista-contenedor" class="historial-lista">
             <div id="status" class="status-msg">Consultando base de datos...</div>
         </div>
     </div>
 
     <footer>
-        © Estamos fritos.com
+        Â© Estamos fritos.com
     </footer>
 
     <script>
@@ -186,16 +186,16 @@
                 // Limpiar mensaje de carga
                 contenedor.innerHTML = "";
 
-                // Recorrer y construir las filas dinámicas con los datos de Google Sheets
+                // Recorrer y construir las filas dinÃ¡micas con los datos de Google Sheets
                 registros.forEach(item => {
                     const divItem = document.createElement('div');
                     divItem.className = 'historial-item';
 
                     divItem.innerHTML = `
-                        <div class="item-fecha">?? ${item.fecha}</div>
+                        <div class="item-fecha">ðŸ“… ${item.fecha}</div>
                         <div class="item-precios">
-                            <div class="precio-divisa">?? $: <span>${parseFloat(item.dolar).toFixed(2)} Bs</span></div>
-                            <div class="precio-divisa">?? €: <span>${parseFloat(item.euro).toFixed(2)} Bs</span></div>
+                            <div class="precio-divisa">ðŸ’µ $: <span>${parseFloat(item.dolar).toFixed(2)} Bs</span></div>
+                            <div class="precio-divisa">ðŸ’¶ â‚¬: <span>${parseFloat(item.euro).toFixed(2)} Bs</span></div>
                         </div>
                     `;
                     contenedor.appendChild(divItem);
@@ -203,7 +203,7 @@
             })
             .catch(error => {
                 console.error("Error al leer el historial:", error);
-                statusMsg.innerText = "Error de conexión con la base de datos.";
+                statusMsg.innerText = "Error de conexiÃ³n con la base de datos.";
             });
         }
     </script>
