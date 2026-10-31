@@ -386,6 +386,76 @@
     
  
  
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ // ==========================================================================
+// SCRIPT SÓLO PARA EL CONVERTIDOR DE EURO (INTERCEPTOR OFFLINE DE VARIABLE)
+// ==========================================================================
+(function() {
+    function aplicarSalvavidasEuroOffline() {
+        // Traemos la tasa del Euro que la página principal guarda en la caché
+        const euroGuardado = localStorage.getItem('respaldo_euro');
+        
+        // Si estás offline o la tasa quedó en cero
+        if (!navigator.onLine || typeof TASA_EURO === 'undefined' || TASA_EURO === 0 || TASA_EURO === 871.89) {
+            if (euroGuardado && euroGuardado !== "0" && euroGuardado !== "000.00") {
+                // Forzamos el valor guardado en tu variable matemática nativa
+                TASA_EURO = parseFloat(euroGuardado);
+                
+                // Actualizamos visualmente tu etiqueta de referencia para que no muestre ceros
+                const lblTasaRef = document.getElementById('tasa-referencia-eur');
+                if (lblTasaRef) {
+                    lblTasaRef.innerText = `1 EUR = ${TASA_EURO.toFixed(2)} Bs (Offline)`;
+                }
+                
+                // Forzamos a tu función nativa a realizar el cálculo con el valor recuperado
+                const inputElement = document.getElementById('amount-input');
+                if (inputElement && inputElement.value !== '0' && typeof autoConvert === 'function') {
+                    autoConvert(parseFloat(inputElement.value));
+                }
+            }
+        } else {
+            // SI HAY INTERNET: Mantenemos la memoria local al día con lo que traiga tu Sheets
+            if (typeof TASA_EURO !== 'undefined' && TASA_EURO > 0 && TASA_EURO !== 871.89) {
+                localStorage.setItem('respaldo_euro', TASA_EURO.toString());
+            }
+        }
+    }
+
+    // Ejecutar inmediatamente al abrir la pantalla
+    aplicarSalvavidasEuroOffline();
+
+    // Interceptar cada vez que el usuario presione un número en tu teclado en pantalla
+    const contenedorTeclado = document.querySelector('.keyboard');
+    if (contenedorTeclado) {
+        contenedorTeclado.addEventListener('click', function() {
+            // Un micro-retraso para permitir que tu función pressNum actualice el valor antes
+            setTimeout(aplicarSalvavidasEuroOffline, 50);
+        });
+    }
+
+    // Reintento de seguridad a los 4 segundos por cargas lentas
+    setTimeout(aplicarSalvavidasEuroOffline, 4000);
+
+    // Si vuelve internet, recarga inmediata para conectar con tu Google Sheets
+    window.addEventListener('online', function() {
+        window.location.reload();
+    });
+})();
+
+ 
+ 
+ 
+ 
+ 
 </script>
 
 </body>

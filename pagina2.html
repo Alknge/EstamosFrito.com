@@ -303,9 +303,9 @@
             <div class="btn-icon">🔒</div>
         </a>
 
-        <a href="chat.html" class="menu-btn">
-            <div class="btn-text" id="btn-videos">Chat pública en linea</div>
-            <div class="btn-icon">💬🗨️</div>
+        <a href="videos.html" class="menu-btn">
+            <div class="btn-text" id="btn-videos">Centro Multimedia de Videos</div>
+            <div class="btn-icon">🎬</div>
         </a>
     </div>
 
@@ -462,6 +462,45 @@
     }
     
  
+ 
+ 
+
+
+
+
+
+// ==========================================================================
+// SCRIPT SÓLO PARA PÁGINA PRINCIPAL (RESPALDO DE TASA MÁSTER)
+// ==========================================================================
+(function() {
+    const ID_HOY = 'tasa-hoy';
+    const ID_MANANA = 'tasa-manana';
+
+    function sincronizarPrincipal() {
+        const elHoy = document.getElementById(ID_HOY);
+        const elMan = document.getElementById(ID_MANANA);
+        if (!elHoy) return;
+
+        const txtHoy = elHoy.innerText.trim();
+
+        if (!navigator.onLine || txtHoy === "0" || txtHoy === "000.00" || txtHoy === "") {
+            const h = localStorage.getItem('respaldo_dolar_hoy');
+            const m = localStorage.getItem('respaldo_dolar_manana');
+            if (h) elHoy.innerText = h;
+            if (m && elMan) elMan.innerText = m;
+        } else {
+            localStorage.setItem('respaldo_dolar_hoy', txtHoy);
+            if (elMan) localStorage.setItem('respaldo_dolar_manana', elMan.innerText.trim());
+        }
+    }
+
+    sincronizarPrincipal();
+    setTimeout(sincronizarPrincipal, 4000);
+    window.addEventListener('online', function() { window.location.reload(); });
+})();
+
+
+
 </script>
 
 </body>

@@ -347,6 +347,65 @@
     
      
      
+     
+     
+     
+     
+     
+     
+     // ==========================================================================
+// SCRIPT SÓLO PARA CONVERTIDORES (INTERCEPTOR OFFLINE DE VARIABLE INTERNA)
+// ==========================================================================
+(function() {
+    function aplicarSalvavidasOffline() {
+        // Traemos la tasa que guardó la página principal
+        const tasaGuardada = localStorage.getItem('respaldo_dolar_hoy');
+        
+        // Si no hay internet o tu variable quedó en cero, forzamos el respaldo en tu código
+        if (!navigator.onLine || typeof TASA_DIARIA === 'undefined' || TASA_DIARIA === 0) {
+            if (tasaGuardada && tasaGuardada !== "0") {
+                TASA_DIARIA = parseFloat(tasaGuardada);
+                
+                // Corregimos la visualización de la fecha usando el ID real de tu HTML
+                const elFecha = document.getElementById('fecha-actualizacion-calc');
+                if (elFecha && elFecha.innerText.includes('Cargando')) {
+                    elFecha.innerText = "Última actualización (Modo Offline)";
+                }
+                
+                // Ejecutamos tu función nativa de conversión matemática
+                if (typeof executeAutoConversion === 'function') {
+                    executeAutoConversion();
+                }
+            }
+        } else {
+            // Si hay internet, nos aseguramos de mantener actualizada la caché local
+            if (typeof TASA_DIARIA !== 'undefined' && TASA_DIARIA > 0) {
+                localStorage.setItem('respaldo_dolar_hoy', TASA_DIARIA.toString());
+            }
+        }
+    }
+
+    // Ejecutar inmediatamente
+    aplicarSalvavidasOffline();
+
+    // Vigilar el campo cuando el usuario escribe en modo offline
+    const inputField = document.getElementById('primary-input');
+    if (inputField) {
+        inputField.addEventListener('input', aplicarSalvavidasOffline);
+    }
+
+    // Dar un reintento a los 4 segundos por si acaso la carga lenta activa el cero
+    setTimeout(aplicarSalvavidasOffline, 4000);
+
+    // Cuando el internet vuelva, recargamos la app para conectar con Google Sheets de inmediato
+    window.addEventListener('online', function() {
+        window.location.reload();
+    });
+})();
+
+
+
+     
 </script>
 
 </body>
