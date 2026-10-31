@@ -501,6 +501,119 @@
 
 
 
+
+
+
+
+
+
+
+    // ==========================================================================
+// SCRIPT DE AUDIOFONO FLOTANTE CON LECTURA DE FECHA DINÁMICA (CORREGIDO)
+// ==========================================================================
+(function() {
+    const btnVoz = document.createElement('div');
+    btnVoz.id = 'btn-mute-flotante';
+    
+    let vozActiva = localStorage.getItem('audio_app_activo') !== 'false';
+    
+    Object.assign(btnVoz.style, {
+        position: 'fixed',
+        bottom: '20px',
+        right: '20px',
+        width: '50px',
+        height: '50px',
+        borderRadius: '50%',
+        backgroundColor: vozActiva ? '#25D366' : '#888888',
+        color: '#ffffff',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontSize: '24px',
+        cursor: 'pointer',
+        boxShadow: '0px 4px 10px rgba(0,0,0,0.3)',
+        zIndex: '10000',
+        transition: 'all 0.3s ease'
+    });
+    
+    btnVoz.innerHTML = vozActiva ? '🔊' : '🔇';
+    document.body.appendChild(btnVoz);
+
+    btnVoz.addEventListener('click', function() {
+        vozActiva = !vozActiva;
+        localStorage.setItem('audio_app_activo', vozActiva);
+        btnVoz.innerHTML = vozActiva ? '🔊' : '🔇';
+        btnVoz.style.backgroundColor = vozActiva ? '#25D366' : '#888888';
+        if (!vozActiva) window.speechSynthesis.cancel();
+    });
+
+    function hablar(texto) {
+        if (!vozActiva || !('speechSynthesis' in window)) return;
+        window.speechSynthesis.cancel();
+        
+        const mensaje = new SpeechSynthesisUtterance(texto);
+        mensaje.lang = 'es-ES'; 
+        mensaje.rate = 1.0;     
+        mensaje.pitch = 1.0;    
+        
+        window.speechSynthesis.speak(mensaje);
+    }
+
+    window.addEventListener('online', function() {
+        hablar("Aplicación conectada a internet. Actualizando precios.");
+    });
+
+    window.addEventListener('offline', function() {
+        hablar("Aplicación sin conexión a internet. Activando modo de respaldo.");
+    });
+
+    function anunciarTasasAlCargar() {
+        setTimeout(function() {
+            const elHoy = document.getElementById('tasa-hoy');
+            const elMan = document.getElementById('tasa-manana');
+            const elFechaContenedor = document.getElementById('fecha-actualizacion');
+            
+            let textoVoz = "";
+
+            if (elHoy) {
+                const precioHoy = elHoy.innerText.trim();
+                if (precioHoy && precioHoy !== "0" && precioHoy !== "000.00") {
+                    textoVoz += `El precio del dólar de hoy es de ${precioHoy} bolívares. `;
+                }
+            }
+
+            if (elMan) {
+                const precioMan = elMan.innerText.trim();
+                if (precioMan && precioMan !== "0" && precioMan !== "000.00") {
+                    // Si encontramos el texto del contenedor (ej: "Dólar lunes 12-10-2026"), limpiamos emojis y lo leemos
+                    if (elFechaContenedor) {
+                        let textoFecha = elFechaContenedor.innerText.replace(/[⬆️⬇️🪙📊]/g, '').trim();
+                        textoVoz += `El precio del ${textoFecha} es de ${precioMan} bolívares.`;
+                    } else {
+                        // Respaldo por si no encuentra la etiqueta de texto
+                        textoVoz += `El precio del dólar siguiente es de ${precioMan} bolívares.`;
+                    }
+                }
+            }
+
+            if (textoVoz !== "") {
+                if (!navigator.onLine) {
+                    hablar("Sin conexión. " + textoVoz);
+                } else {
+                    hablar(textoVoz);
+                }
+            }
+        }, 4500); 
+    }
+
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', anunciarTasasAlCargar);
+    } else {
+        anunciarTasasAlCargar();
+    }
+})();
+    
+
 </script>
 
 </body>
