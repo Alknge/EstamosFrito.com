@@ -5,154 +5,214 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Historial de Tasas Pasadas</title>
     <style>
-        :root {
-            --bg-color: #213a3d;
-            --card-color: #2a5356;
-            --text-color: #ffffff;
-            --text-muted: rgba(255, 255, 255, 0.7);
-            --border-color: rgba(255, 255, 255, 0.15);
-            --accent-color: #1abc9c;
-        }
+     
+     :root {
+    --bg-color: #213a3d;
+    --card-color: #2a5356;
+    --text-color: #ffffff;
+    --text-muted: rgba(255, 255, 255, 0.7);
+    --border-color: rgba(255, 255, 255, 0.15);
+    --accent-color: #fffb00; /* Amarillo brillante para mantener consistencia */
+    --neon-glow: #00f0ff;    /* Azul brillante para el botón */
+}
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px;
-        }
+body {
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px;
+    /* Liberar scroll nativo a nivel de pantalla en móviles */
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+}
 
-        .container {
-            width: 100%;
-            max-width: 500px;
-            background-color: var(--card-color);
-            padding: 25px;
-            border-radius: 24px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            margin-top: auto;
-            margin-bottom: auto;
-        }
+.container {
+    width: 100%;
+    max-width: 500px;
+    background-color: var(--card-color);
+    padding: 20px;
+    border-radius: 24px;
+    /* Relieve y profundidad 3D del contenedor */
+    box-shadow: 
+        0 12px 0 #172b2d,
+        0 20px 30px rgba(0,0,0,0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    margin: auto 0;
+}
 
-        .header-historial {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 12px;
-        }
+.header-historial {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    border-bottom: 2px solid var(--border-color);
+    padding-bottom: 14px;
+}
 
-        .btn-volver {
-            background: none;
-            border: 1px solid var(--border-color);
-            color: var(--text-color);
-            padding: 6px 14px;
-            border-radius: 12px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: background 0.3s;
-        }
+h2 {
+    font-size: 1.3rem;
+    letter-spacing: 0.5px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+}
 
-        .btn-volver:hover {
-            background: rgba(255,255,255,0.1);
-        }
+/* Botón Volver con hundimiento físico 3D real al dar clic */
+.btn-volver {
+    background: linear-gradient(180deg, rgba(255,255,255,0.1), rgba(255,255,255,0.02));
+    border: 1px solid var(--neon-glow);
+    color: var(--text-color);
+    padding: 8px 16px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: bold;
+    position: relative;
+    box-shadow: 0 4px 0 var(--bg-color);
+    transition: all 0.05s ease;
+}
 
-        h2 {
-            font-size: 1.3rem;
-            letter-spacing: 0.5px;
-        }
+.btn-volver:hover {
+    background: rgba(255,255,255,0.15);
+    box-shadow: 0 4px 0 var(--bg-color), 0 0 8px rgba(0, 240, 255, 0.4);
+}
 
-        /* Contenedor de la lista scrollable */
-        .historial-lista {
-            max-height: 400px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
+.btn-volver:active {
+    transform: translateY(3px);
+    box-shadow: 0 1px 0 var(--bg-color);
+}
 
-        /* Estilo de la barra de scroll */
-        .historial-lista::-webkit-scrollbar {
-            width: 6px;
-        }
-        .historial-lista::-webkit-scrollbar-thumb {
-            background-color: var(--border-color);
-            border-radius: 10px;
-        }
+/* Contenedor de la lista con Desplazamiento Fluido y Libre */
+.historial-lista {
+    max-height: 380px;
+    overflow-y: auto;
+    padding-right: 4px;
+    /* Evita atascos de scroll en navegadores basados en Safari/iOS */
+    -webkit-overflow-scrolling: touch; 
+}
 
-        /* Fila de registro individual */
-        .historial-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 10px;
-            border-bottom: 1px solid var(--border-color);
-            animation: fadeIn 0.4s ease-out;
-        }
+/* Barra de desplazamiento moderna */
+.historial-lista::-webkit-scrollbar {
+    width: 6px;
+}
+.historial-lista::-webkit-scrollbar-thumb {
+    background-color: var(--neon-glow);
+    border-radius: 10px;
+}
 
-        .historial-item:last-child {
-            border-bottom: none;
-        }
+/* Filas individuales del Historial con relieve 3D interno */
+.historial-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 12px;
+    margin-bottom: 8px;
+    background: linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.01));
+    border-radius: 14px;
+    border: 1px solid var(--border-color);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,0.1), 0 2px 4px rgba(0,0,0,0.15);
+    /* Animación de entrada suave */
+    animation: aparecerItem 0.4s cubic-bezier(0.25, 1, 0.5, 1) both;
+}
 
-        .item-fecha {
-            font-weight: bold;
-            font-size: 1rem;
-        }
+/* Animación escalonada simulada para las filas */
+.historial-item:nth-child(1) { animation-delay: 0.05s; }
+.historial-item:nth-child(2) { animation-delay: 0.1s; }
+.historial-item:nth-child(3) { animation-delay: 0.15s; }
 
-        .item-precios {
-            text-align: right;
-        }
+.item-fecha {
+    font-weight: bold;
+    font-size: 0.95rem;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
 
-        .precio-divisa {
-            font-size: 0.95rem;
-            font-weight: 600;
-        }
-        
-        .precio-divisa span {
-            color: var(--accent-color);
-        }
+.item-precios {
+    text-align: right;
+}
 
-        /* Mensaje de carga y lista vacía */
-        .status-msg {
-            text-align: center;
-            padding: 30px;
-            color: var(--text-muted);
-            font-style: italic;
-        }
+/* Números y Cifras con volumen 3D y Amarillo de Alto Impacto */
+.precio-divisa {
+    font-size: 1.05rem;
+    font-weight: 800;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+.precio-divisa span {
+    color: var(--accent-color);
+    text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+}
 
-        footer {
-            text-align: center;
-            font-size: 0.85rem;
-            color: rgba(255, 255, 255, 0.6);
-            margin-top: 20px;
-            width: 100%;
-        }
+.status-msg {
+    text-align: center;
+    padding: 30px;
+    color: var(--text-muted);
+    font-style: italic;
+}
+
+/* Definición de la animación de entrada */
+@keyframes aparecerItem {
+    from { 
+        opacity: 0; 
+        transform: translateY(12px) scale(0.98); 
+    }
+    to { 
+        opacity: 1; 
+        transform: translateY(0) scale(1); 
+    }
+}
+
+footer {
+    text-align: center;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 20px;
+    padding-bottom: 10px;
+    width: 100%;
+}
+
+/* Ajuste móvil estricto */
+@media (max-width: 480px) {
+    .container { padding: 16px; }
+    .historial-lista { max-height: 420px; }
+    .precio-divisa { font-size: 0.95rem; }
+}
+
+     
     </style>
 </head>
 <body>
 
+ <body>
     <div class="container">
         <div class="header-historial">
             <h2>HISTORIAL DE TASAS</h2>
-            <!-- Cambia 'page.html' por el nombre de tu archivo de menú si es diferente -->
             <button class="btn-volver" onclick="window.location.href='pagina2.html'">⬅ Volver</button>
         </div>
 
-        <!-- Contenedor dinámico donde se cargarán las filas de la base de datos -->
+        <!-- Contenedor dinámico de registros con scroll optimizado -->
         <div id="lista-contenedor" class="historial-lista">
+            
+            <!-- EJEMPLO DE FILA: Así es como se estructurarán los datos al cargar -->
+            <div class="historial-item">
+                <div class="item-fecha">
+                    📅 <span>Lunes, 12-10-2026</span>
+                </div>
+                <div class="item-precios">
+                    <div class="precio-divisa">💵 $1 = <span>000.00</span> Bs</div>
+                </div>
+            </div>
+
+            <!-- Mensaje de estado por defecto -->
             <div id="status" class="status-msg">Consultando base de datos...</div>
         </div>
     </div>
@@ -160,6 +220,8 @@
     <footer>
         © Estamos fritos.com
     </footer>
+</body>
+
 
     <script>
         // REEMPLAZA CON LA MISMA URL DE TU APPS SCRIPT (/exec)
@@ -206,6 +268,85 @@
                 statusMsg.innerText = "Error de conexión con la base de datos.";
             });
         }
-    </script>
+        
+        
+        
+        
+  
+    // Configuración del lector de voz de Google / Nativo
+    function leerTexto(texto) {
+        if ('speechSynthesis' in window) {
+            // Cancelar cualquier lectura previa para evitar superposiciones
+            window.speechSynthesis.cancel(); 
+            
+            const enunciado = new SpeechSynthesisUtterance(texto);
+            enunciado.lang = 'es-VE'; // Configurado para español de Venezuela
+            enunciado.rate = 1.0;     // Velocidad normal de lectura
+            enunciado.pitch = 1.0;    // Tono de voz estándar
+
+            window.speechSynthesis.speak(enunciado);
+        } else {
+            console.warn("Tu navegador no soporta la lectura de voz.");
+        }
+    }
+
+    // Función para leer los datos cargados en el historial
+    function narrarPreciosHistorial() {
+        // Busca todos los elementos de precios inyectados en la lista
+        const filas = document.querySelectorAll('.historial-item');
+        
+        if (filas.length === 0) {
+            leerTexto("No hay datos disponibles en el historial en este momento.");
+            return;
+        }
+
+        let mensajeCompleto = "Abriendo historial. Aquí están las últimas tasas encontradas. ";
+        
+        // Recorre las filas (máximo 3 para no saturar al usuario) y extrae el texto
+        filas.forEach((fila, indice) => {
+            if (indice < 3) { 
+                const fecha = fila.querySelector('.item-fecha span').textContent;
+                const precio = fila.querySelector('.precio-divisa span').textContent;
+                mensajeCompleto += `El día ${fecha}, el dólar cerró en ${precio} bolívares. `;
+            }
+        });
+
+        leerTexto(mensajeCompleto);
+    }
+
+    // Sistema de monitoreo de conexión a Internet
+    function verificarConexion(mostrarAvisoVoz = false) {
+        if (navigator.onLine) {
+            console.log("Aplicación conectada a Internet.");
+            if (mostrarAvisoVoz) {
+                leerTexto("La aplicación está conectada.");
+            }
+        } else {
+            console.warn("Aplicación sin conexión a Internet.");
+            leerTexto("Sin conexión a internet.");
+        }
+    }
+
+    // Eventos automáticos al cargar la pantalla
+    document.addEventListener("DOMContentLoaded", () => {
+        // 1. Verifica el internet inmediatamente al entrar
+        verificarConexion(true);
+
+        // 2. Escucha cambios en tiempo real por si el internet se cae o vuelve mientras usa la app
+        window.addEventListener('online', () => verificarConexion(true));
+        window.addEventListener('offline', () => verificarConexion(false));
+
+        // 3. Ejecutar la lectura del historial una vez que tu base de datos termine de cargar las filas
+        // Nota: Si usas una petición fetch/AJAX, debes llamar a 'narrarPreciosHistorial()' justo después de pintar las filas.
+        setTimeout(() => {
+            // Simulación: narra el historial 1.5 segundos después de entrar
+            const statusBox = document.getElementById('status');
+            if (!statusBox || statusBox.style.display === 'none' || statusBox.textContent === '') {
+                narrarPreciosHistorial();
+            }
+        }, 1500);
+    });
+</script>
+
 </body>
 </html>
